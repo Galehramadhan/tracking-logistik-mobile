@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mobile_scanner/mobile_scanner.dart';
 
 class SafeShipApp extends StatelessWidget {
   const SafeShipApp({super.key});
+
 
   @override
   Widget build(BuildContext context) {
@@ -260,9 +262,26 @@ class HomeView extends ConsumerWidget {
             width: double.infinity,
             height: 48,
             child: ElevatedButton.icon(
-              onPressed: () {
+              onPressed: () async {
+                final scannedData = await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const ScannerView(),
+                  ),
+                );
+
+                // Jika berhasil mendapatkan data scan dari kamera
+                if (scannedData != null && context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Berhasil Scan Resi: $scannedData', style: const TextStyle(fontFamily: 'Poppins')),
+                      backgroundColor: Colors.green,
+                      behavior: SnackBarBehavior.floating,
+                    ),
+                  );
                 // Navigasi ke halaman pengiriman ketika discan
                 Navigator.pushNamed(context, '/pengiriman');
+                }
               },
               icon: const Icon(Icons.document_scanner, color: Colors.white),
               label: const Text(
@@ -437,6 +456,108 @@ class HomeView extends ConsumerWidget {
   }
 }
 
+// ============================================================================
+// BARCODE SCANNER VIEW
+// ============================================================================
+
+class ScannerView extends StatefulWidget {
+  const ScannerView({super.key});
+
+  @override
+  State<ScannerView> createState() => _ScannerViewState();
+}
+
+class _ScannerViewState extends State<ScannerView> {
+  final MobileScannerController cameraController = MobileScannerController();
+  bool _isScanned = false; 
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Scan Barcode', style: TextStyle(fontFamily: 'Poppins', fontWeight: FontWeight.w500, fontSize: 18)),
+        actions: [
+          IconButton(
+            color: Colors.white,
+            icon: ValueListenableBuilder(
+              valueListenable: cameraController, 
+              builder: (context, state, child) {
+                switch (state.torchState) {
+                  case TorchState.off:
+                    return const Icon(Icons.flash_off, color: Colors.black87);
+                  case TorchState.on:
+                    return const Icon(Icons.flash_on, color: Colors.orange);
+                  default:
+                    return const Icon(Icons.flash_off, color: Colors.grey);  
+                }
+              },
+            ),
+            onPressed: () => cameraController.toggleTorch(),
+          ),
+          IconButton(
+            color: Colors.black87,
+            icon: const Icon(Icons.flip_camera_ios),
+            onPressed: () => cameraController.switchCamera(),
+          ),
+        ],
+      ),
+      body: Stack(
+        children: [
+          MobileScanner(
+            controller: cameraController,
+            onDetect: (capture) {
+              if (_isScanned) return;
+
+              final List<Barcode> barcodes = capture.barcodes;
+              if (barcodes.isNotEmpty) {
+                final String? code = barcodes.first.rawValue;
+                if (code != null) {
+                  setState(() {
+                    _isScanned = true; 
+                  });
+                  
+                  Navigator.pop(context, code);
+                }
+              }
+            },
+          ),
+          Center(
+            child: Container(
+              width: 250,
+              height: 250,
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.blueAccent, width: 3),
+                borderRadius: BorderRadius.circular(16),
+              ),
+            ),
+          ),
+          const Positioned(
+            bottom: 40,
+            left: 0,
+            right: 0,
+            child: Center(
+              child: Text(
+                'Arahkan kamera ke barcode resi pengiriman',
+                style: TextStyle(
+                  fontFamily: 'Poppins',
+                  color: Colors.white,
+                  backgroundColor: Colors.black54,
+                  fontSize: 14,
+                ),
+              ),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+  
+  @override
+  void dispose() {
+    cameraController.dispose();
+    super.dispose();
+  }
+}
 // ============================================================================
 // DUMMY VIEWS UNTUK TESTING ROUTING
 // ============================================================================
