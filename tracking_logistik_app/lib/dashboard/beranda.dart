@@ -1,0 +1,470 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+class SafeShipApp extends StatelessWidget {
+  const SafeShipApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'SafeShip',
+      debugShowCheckedModeBanner: false,
+      // Konfigurasi Tema Utama (Material 3 & Poppins)
+      theme: ThemeData(
+        useMaterial3: true,
+        fontFamily: 'Poppins',
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color(0xFF1964D4), // Biru Utama
+          primary: const Color(0xFF1964D4),
+          background: const Color(0xFFF8F9FB),
+        ),
+      ),
+      // Konfigurasi Mode Gelap (Opsional, untuk mendukung dark mode sesuai permintaan)
+      darkTheme: ThemeData(
+        useMaterial3: true,
+        fontFamily: 'Poppins',
+        brightness: Brightness.dark,
+        colorScheme: ColorScheme.fromSeed(
+          brightness: Brightness.dark,
+          seedColor: const Color(0xFF1964D4),
+          primary: const Color(0xFF4A89F3),
+        ),
+      ),
+      themeMode: ThemeMode.system, // Menyesuaikan dengan setting device
+      
+      // Routing Dasar
+      initialRoute: '/',
+      routes: {
+        '/': (context) => const HomeView(),
+        '/pengiriman': (context) => const PengirimanViewDummy(),
+        '/riwayat': (context) => const RiwayatViewDummy(),
+      },
+    );
+  }
+}
+
+// ============================================================================
+// PRESENTATION LAYER: HOME VIEW
+// ============================================================================
+
+class HomeView extends ConsumerWidget {
+  const HomeView({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    // Definisi warna berdasarkan referensi gambar
+    const Color primaryBlue = Color(0xFF1964D4);
+    const Color backgroundColor = Color(0xFFF8F9FB);
+    const Color textColor = Color(0xFF1C1C1E);
+
+    // Mengambil warna background berdasarkan tema agar mendukung dark mode
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    final currentBgColor = isDarkMode ? Theme.of(context).colorScheme.background : backgroundColor;
+    final cardColor = isDarkMode ? const Color(0xFF2C2C2E) : Colors.white;
+    final currentTextColor = isDarkMode ? Colors.white : textColor;
+
+    return Scaffold(
+      backgroundColor: currentBgColor,
+      body: Stack(
+        children: [
+          // Background Biru Header
+          Container(
+            height: 240,
+            decoration: const BoxDecoration(
+              color: primaryBlue,
+              borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(24),
+                bottomRight: Radius.circular(24),
+              ),
+            ),
+          ),
+          SafeArea(
+            child: SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 20),
+                    // Header: Greeting & Notifikasi
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Selamat pagi,',
+                              style: TextStyle(
+                                fontFamily: 'Poppins',
+                                color: Colors.white,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ),
+                            Text(
+                              'Budi Santoso', // Nantinya bisa di-bind dari ProfileState
+                              style: TextStyle(
+                                fontFamily: 'Poppins',
+                                color: Colors.white,
+                                fontSize: 20,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ],
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.notifications_none_rounded, color: Colors.white, size: 28),
+                          onPressed: () {
+                            // TODO: Implementasi navigasi ke notifikasi
+                          },
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 30),
+
+                    // Section Scan Barcode (Menggantikan Lacak Kiriman)
+                    _buildScanBarcodeCard(context, primaryBlue, cardColor, currentTextColor),
+                    
+                    const SizedBox(height: 24),
+
+                    // Title Ringkasan Pengiriman
+                    Text(
+                      'Ringkasan Pengiriman',
+                      style: TextStyle(
+                        fontFamily: 'Poppins',
+                        color: currentTextColor,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+
+                    // Grid Ringkasan Pengiriman
+                    GridView.count(
+                      crossAxisCount: 2,
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      crossAxisSpacing: 16,
+                      mainAxisSpacing: 16,
+                      childAspectRatio: 1.5,
+                      children: [
+                        _buildSummaryCard(
+                          context: context,
+                          title: 'Dalam Proses',
+                          count: '3',
+                          icon: Icons.inventory_2_outlined,
+                          iconColor: Colors.deepPurpleAccent,
+                          iconBgColor: Colors.deepPurple.withOpacity(0.1),
+                          cardColor: cardColor,
+                          textColor: currentTextColor,
+                          targetRoute: '/pengiriman',
+                        ),
+                        _buildSummaryCard(
+                          context: context,
+                          title: 'Dalam Perjalanan',
+                          count: '1',
+                          icon: Icons.local_shipping_outlined,
+                          iconColor: primaryBlue,
+                          iconBgColor: primaryBlue.withOpacity(0.1),
+                          cardColor: cardColor,
+                          textColor: currentTextColor,
+                          targetRoute: '/pengiriman',
+                        ),
+                        _buildSummaryCard(
+                          context: context,
+                          title: 'Selesai',
+                          count: '12',
+                          icon: Icons.check_circle_outline,
+                          iconColor: Colors.green,
+                          iconBgColor: Colors.green.withOpacity(0.1),
+                          cardColor: cardColor,
+                          textColor: currentTextColor,
+                          targetRoute: '/riwayat',
+                        ),
+                        _buildSummaryCard(
+                          context: context,
+                          title: 'Tertunda',
+                          count: '2',
+                          icon: Icons.schedule,
+                          iconColor: Colors.orange,
+                          iconBgColor: Colors.orange.withOpacity(0.1),
+                          cardColor: cardColor,
+                          textColor: currentTextColor,
+                          targetRoute: '/riwayat',
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 24),
+
+                    // Promotional Banner (Pantau Kiriman)
+                    _buildPromoBanner(primaryBlue, cardColor),
+                    const SizedBox(height: 30),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+      
+      // Bottom Navigation Bar
+      bottomNavigationBar: _buildBottomNavigationBar(primaryBlue, cardColor),
+    );
+  }
+
+  Widget _buildScanBarcodeCard(BuildContext context, Color primaryColor, Color cardColor, Color textColor) {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: cardColor,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(Icons.qr_code_scanner_rounded, color: textColor),
+              const SizedBox(width: 8),
+              Text(
+                'Scan Barcode Driver',
+                style: TextStyle(
+                  fontFamily: 'Poppins',
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  color: textColor,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          const Text(
+            'Scan barcode dari perangkat driver untuk melihat detail dan mengelola pengiriman.',
+            style: TextStyle(
+              fontFamily: 'Poppins',
+              fontSize: 12,
+              color: Color(0xFF8E8E93),
+            ),
+          ),
+          const SizedBox(height: 16),
+          SizedBox(
+            width: double.infinity,
+            height: 48,
+            child: ElevatedButton.icon(
+              onPressed: () {
+                // Navigasi ke halaman pengiriman ketika discan
+                Navigator.pushNamed(context, '/pengiriman');
+              },
+              icon: const Icon(Icons.document_scanner, color: Colors.white),
+              label: const Text(
+                'Scan Sekarang',
+                style: TextStyle(
+                  fontFamily: 'Poppins',
+                  fontWeight: FontWeight.w500,
+                  color: Colors.white,
+                ),
+              ),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: primaryColor,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                elevation: 0,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSummaryCard({
+    required BuildContext context,
+    required String title,
+    required String count,
+    required IconData icon,
+    required Color iconColor,
+    required Color iconBgColor,
+    required Color cardColor,
+    required Color textColor,
+    required String targetRoute,
+  }) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.pushNamed(context, targetRoute);
+      },
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: cardColor,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.03),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: iconBgColor,
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(icon, color: iconColor, size: 24),
+                ),
+                Text(
+                  count,
+                  style: TextStyle(
+                    fontFamily: 'Poppins',
+                    fontSize: 24,
+                    fontWeight: FontWeight.w600,
+                    color: textColor,
+                  ),
+                ),
+              ],
+            ),
+            const Spacer(),
+            Text(
+              title,
+              style: const TextStyle(
+                fontFamily: 'Poppins',
+                fontSize: 12,
+                fontWeight: FontWeight.w500,
+                color: Color(0xFF8E8E93),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPromoBanner(Color primaryColor, Color cardColor) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: primaryColor.withOpacity(0.05),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: primaryColor.withOpacity(0.1)),
+      ),
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: cardColor,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Icon(Icons.map_outlined, color: primaryColor, size: 32),
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Pantau kiriman Anda',
+                  style: TextStyle(
+                    fontFamily: 'Poppins',
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: primaryColor,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                const Text(
+                  'Dapatkan informasi terbaru status pengiriman secara real-time.',
+                  style: TextStyle(
+                    fontFamily: 'Poppins',
+                    fontSize: 11,
+                    color: Color(0xFF8E8E93),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildBottomNavigationBar(Color primaryColor, Color cardColor) {
+    return BottomNavigationBar(
+      type: BottomNavigationBarType.fixed,
+      backgroundColor: cardColor,
+      selectedItemColor: primaryColor,
+      unselectedItemColor: const Color(0xFF8E8E93),
+      selectedLabelStyle: const TextStyle(fontFamily: 'Poppins', fontSize: 12, fontWeight: FontWeight.w500),
+      unselectedLabelStyle: const TextStyle(fontFamily: 'Poppins', fontSize: 12),
+      elevation: 16,
+      items: const [
+        BottomNavigationBarItem(
+          icon: Icon(Icons.home_filled),
+          label: 'Beranda',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.inventory_2_outlined),
+          label: 'Pengiriman',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.access_time),
+          label: 'Riwayat',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.person_outline),
+          label: 'Profil',
+        ),
+      ],
+    );
+  }
+}
+
+// ============================================================================
+// DUMMY VIEWS UNTUK TESTING ROUTING
+// ============================================================================
+
+class PengirimanViewDummy extends StatelessWidget {
+  const PengirimanViewDummy({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Halaman Pengiriman', style: TextStyle(fontFamily: 'Poppins'))),
+      body: const Center(
+        child: Text('Tampilan Daftar Pengiriman / Hasil Scan akan di sini.', style: TextStyle(fontFamily: 'Poppins')),
+      ),
+    );
+  }
+}
+
+class RiwayatViewDummy extends StatelessWidget {
+  const RiwayatViewDummy({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Halaman Riwayat', style: TextStyle(fontFamily: 'Poppins'))),
+      body: const Center(
+        child: Text('Tampilan Riwayat Pengiriman Selesai/Tertunda akan di sini.', style: TextStyle(fontFamily: 'Poppins')),
+      ),
+    );
+  }
+}
