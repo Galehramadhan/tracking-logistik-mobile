@@ -111,7 +111,7 @@ class HistoryPage extends ConsumerWidget {
   }
 
   Widget _buildFilterSection(BuildContext context, WidgetRef ref, String currentStatus) {
-    final filters = ['Semua', 'Selesai', 'Tertunda'];
+    final filters = ['Semua', 'Selesai', 'Batal'];
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0),

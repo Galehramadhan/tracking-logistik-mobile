@@ -14,11 +14,11 @@ final dateFilterProvider = StateProvider<DateTime?>((ref) => null);
 final dummyShipmentsProvider = Provider<List<ShipmentEntity>>((ref) {
   return [
     ShipmentEntity(id: '1', resi: 'TRK-2405-0001', status: 'Selesai', date: DateTime(2024, 5, 24, 10, 30), origin: 'Jakarta', destination: 'Surabaya'),
-    ShipmentEntity(id: '2', resi: 'TRK-2405-0002', status: 'Tertunda', date: DateTime(2024, 5, 23, 14, 20), origin: 'Bandung', destination: 'Semarang'),
+    ShipmentEntity(id: '2', resi: 'TRK-2405-0002', status: 'Batal', date: DateTime(2024, 5, 23, 14, 20), origin: 'Bandung', destination: 'Semarang'),
     ShipmentEntity(id: '3', resi: 'TRK-2405-0003', status: 'Selesai', date: DateTime(2024, 5, 22, 9, 15), origin: 'Jakarta', destination: 'Yogyakarta'),
-    ShipmentEntity(id: '4', resi: 'TRK-2405-0004', status: 'Tertunda', date: DateTime(2024, 5, 21, 16, 45), origin: 'Medan', destination: 'Palembang'),
+    ShipmentEntity(id: '4', resi: 'TRK-2405-0004', status: 'Batal', date: DateTime(2024, 5, 21, 16, 45), origin: 'Medan', destination: 'Palembang'),
     ShipmentEntity(id: '5', resi: 'TRK-2405-0005', status: 'Selesai', date: DateTime(2024, 5, 20, 8, 0), origin: 'Surabaya', destination: 'Bali'),
-    ShipmentEntity(id: '6', resi: 'TRK-2405-0006', status: 'Tertunda', date: DateTime(2024, 5, 19, 11, 10), origin: 'Makassar', destination: 'Manado'),
+    ShipmentEntity(id: '6', resi: 'TRK-2405-0006', status: 'Batal', date: DateTime(2024, 5, 19, 11, 10), origin: 'Makassar', destination: 'Manado'),
     ShipmentEntity(id: '7', resi: 'TRK-2405-0007', status: 'Selesai', date: DateTime(2024, 5, 18, 13, 25), origin: 'Balikpapan', destination: 'Samarinda'),
     ShipmentEntity(id: '8', resi: 'TRK-2405-0008', status: 'Selesai', date: DateTime(2024, 5, 17, 15, 50), origin: 'Jakarta', destination: 'Lampung'),
   ];

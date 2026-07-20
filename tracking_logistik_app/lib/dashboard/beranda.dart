@@ -196,7 +196,7 @@ class HomeView extends ConsumerWidget {
                         _buildSummaryCard(
                           context: context,
                           ref: ref,
-                          title: 'Tertunda',
+                          title: 'Batal',
                           count: '2',
                           icon: Icons.schedule,
                           iconColor: Colors.orange,
@@ -204,7 +204,7 @@ class HomeView extends ConsumerWidget {
                           cardColor: cardColor,
                           textColor: currentTextColor,
                           targetRoute: '/riwayat',
-                          filterStatus: 'Tertunda',
+                          filterStatus: 'Batal',
                         ),
                       ],
                     ),
@@ -608,7 +608,7 @@ class RiwayatViewDummy extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: const Text('Halaman Riwayat', style: TextStyle(fontFamily: 'Poppins'))),
       body: const Center(
-        child: Text('Tampilan Riwayat Pengiriman Selesai/Tertunda akan di sini.', style: TextStyle(fontFamily: 'Poppins')),
+        child: Text('Tampilan Riwayat Pengiriman Selesai/Batal akan di sini.', style: TextStyle(fontFamily: 'Poppins')),
       ),
     );
   }
