@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
+import 'package:tracking_logistik_app/riwayat/riwayatpengiriman.dart';
+import 'package:tracking_logistik_app/riwayat/data.dart';
 
 class SafeShipApp extends StatelessWidget {
   const SafeShipApp({super.key});
@@ -39,7 +41,7 @@ class SafeShipApp extends StatelessWidget {
       routes: {
         '/': (context) => const HomeView(),
         '/pengiriman': (context) => const PengirimanViewDummy(),
-        '/riwayat': (context) => const RiwayatViewDummy(),
+        '/riwayat': (context) => const HistoryPage(),
       },
     );
   }
@@ -154,6 +156,7 @@ class HomeView extends ConsumerWidget {
                       children: [
                         _buildSummaryCard(
                           context: context,
+                          ref:ref,
                           title: 'Dalam Proses',
                           count: '3',
                           icon: Icons.inventory_2_outlined,
@@ -162,9 +165,11 @@ class HomeView extends ConsumerWidget {
                           cardColor: cardColor,
                           textColor: currentTextColor,
                           targetRoute: '/pengiriman',
+                          filterStatus: null,
                         ),
                         _buildSummaryCard(
                           context: context,
+                          ref: ref,
                           title: 'Dalam Perjalanan',
                           count: '1',
                           icon: Icons.local_shipping_outlined,
@@ -173,9 +178,11 @@ class HomeView extends ConsumerWidget {
                           cardColor: cardColor,
                           textColor: currentTextColor,
                           targetRoute: '/pengiriman',
+                          filterStatus: null,
                         ),
                         _buildSummaryCard(
                           context: context,
+                          ref: ref,
                           title: 'Selesai',
                           count: '12',
                           icon: Icons.check_circle_outline,
@@ -184,9 +191,11 @@ class HomeView extends ConsumerWidget {
                           cardColor: cardColor,
                           textColor: currentTextColor,
                           targetRoute: '/riwayat',
+                          filterStatus: 'Selesai',
                         ),
                         _buildSummaryCard(
                           context: context,
+                          ref: ref,
                           title: 'Tertunda',
                           count: '2',
                           icon: Icons.schedule,
@@ -195,6 +204,7 @@ class HomeView extends ConsumerWidget {
                           cardColor: cardColor,
                           textColor: currentTextColor,
                           targetRoute: '/riwayat',
+                          filterStatus: 'Tertunda',
                         ),
                       ],
                     ),
@@ -212,7 +222,7 @@ class HomeView extends ConsumerWidget {
       ),
       
       // Bottom Navigation Bar
-      bottomNavigationBar: _buildBottomNavigationBar(primaryBlue, cardColor),
+      bottomNavigationBar: _buildBottomNavigationBar(context, ref, primaryBlue, cardColor),
     );
   }
 
@@ -308,6 +318,7 @@ class HomeView extends ConsumerWidget {
 
   Widget _buildSummaryCard({
     required BuildContext context,
+    required WidgetRef ref,
     required String title,
     required String count,
     required IconData icon,
@@ -316,9 +327,13 @@ class HomeView extends ConsumerWidget {
     required Color cardColor,
     required Color textColor,
     required String targetRoute,
+    required String? filterStatus,
   }) {
     return GestureDetector(
       onTap: () {
+        if (filterStatus != null) {
+          ref.read(statusFilterProvider.notifier).state = filterStatus;
+        }
         Navigator.pushNamed(context, targetRoute);
       },
       child: Container(
@@ -425,7 +440,7 @@ class HomeView extends ConsumerWidget {
     );
   }
 
-  Widget _buildBottomNavigationBar(Color primaryColor, Color cardColor) {
+  Widget _buildBottomNavigationBar(BuildContext context, WidgetRef ref, Color primaryColor, Color cardColor) {
     return BottomNavigationBar(
       type: BottomNavigationBarType.fixed,
       backgroundColor: cardColor,
@@ -434,6 +449,15 @@ class HomeView extends ConsumerWidget {
       selectedLabelStyle: const TextStyle(fontFamily: 'Poppins', fontSize: 12, fontWeight: FontWeight.w500),
       unselectedLabelStyle: const TextStyle(fontFamily: 'Poppins', fontSize: 12),
       elevation: 16,
+      onTap: (index) {
+        if (index == 2) { // Index 2 adalah tab Riwayat
+          ref.read(statusFilterProvider.notifier).state = 'Semua';
+          Navigator.pushNamed(context, '/riwayat');
+        } else if (index == 1) {
+          Navigator.pushNamed(context, '/pengiriman');
+        }
+        // TODO: Implementasi perubahan tab aktif (currentIndex) jika menggunakan state lokal
+      },
       items: const [
         BottomNavigationBarItem(
           icon: Icon(Icons.home_filled),
