@@ -109,7 +109,7 @@ class HomeView extends ConsumerWidget {
                               ),
                             ),
                             Text(
-                              'Budi Santoso', // Nantinya bisa di-bind dari ProfileState
+                              'Galeh Ramadhan', // Nantinya bisa di-bind dari ProfileState
                               style: TextStyle(
                                 fontFamily: 'Poppins',
                                 color: Colors.white,
@@ -168,7 +168,7 @@ class HomeView extends ConsumerWidget {
                           context: context,
                           ref: ref,
                           title: 'Dalam Proses',
-                          count: '3',
+                          count: '2',
                           icon: Icons.inventory_2_outlined,
                           iconColor: Colors.deepPurpleAccent,
                           iconBgColor: Colors.deepPurple.withOpacity(0.1),
@@ -194,7 +194,7 @@ class HomeView extends ConsumerWidget {
                           context: context,
                           ref: ref,
                           title: 'Selesai',
-                          count: '12',
+                          count: '5',
                           icon: Icons.check_circle_outline,
                           iconColor: Colors.green,
                           iconBgColor: Colors.green.withOpacity(0.1),
@@ -207,7 +207,7 @@ class HomeView extends ConsumerWidget {
                           context: context,
                           ref: ref,
                           title: 'Batal',
-                          count: '2',
+                          count: '3',
                           icon: Icons.schedule,
                           iconColor: Colors.orange,
                           iconBgColor: Colors.orange.withOpacity(0.1),
@@ -411,7 +411,6 @@ class HomeView extends ConsumerWidget {
       ),
     );
   }
-
   Widget _buildPromoBanner(Color primaryColor, Color cardColor) {
     return Container(
       padding: const EdgeInsets.all(16),
