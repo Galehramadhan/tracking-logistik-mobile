@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:tracking_logistik_app/riwayat/riwayatpengiriman.dart';
 import 'package:tracking_logistik_app/riwayat/data.dart';
-import 'package:tracking_logistik_app/pengiriman/pengiriman_main.dart';
+import 'package:tracking_logistik_app/Pengiriman/pengiriman_main.dart';
 
 class SafeShipApp extends StatelessWidget {
   const SafeShipApp({super.key});
