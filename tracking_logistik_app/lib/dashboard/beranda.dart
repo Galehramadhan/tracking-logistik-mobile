@@ -3,10 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:tracking_logistik_app/riwayat/riwayatpengiriman.dart';
 import 'package:tracking_logistik_app/riwayat/data.dart';
+import 'package:tracking_logistik_app/pengiriman/pengirim.dart';
+import 'package:tracking_logistik_app/pengiriman/pengiriman_main.dart';
 
 class SafeShipApp extends StatelessWidget {
   const SafeShipApp({super.key});
-
 
   @override
   Widget build(BuildContext context) {
@@ -35,12 +36,11 @@ class SafeShipApp extends StatelessWidget {
         ),
       ),
       themeMode: ThemeMode.system, // Menyesuaikan dengan setting device
-      
       // Routing Dasar
       initialRoute: '/',
       routes: {
         '/': (context) => const HomeView(),
-        '/pengiriman': (context) => const PengirimanViewDummy(),
+        '/pengiriman': (context) => const ShipmentPage(),
         '/riwayat': (context) => const HistoryPage(),
       },
     );
@@ -63,7 +63,9 @@ class HomeView extends ConsumerWidget {
 
     // Mengambil warna background berdasarkan tema agar mendukung dark mode
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
-    final currentBgColor = isDarkMode ? Theme.of(context).colorScheme.background : backgroundColor;
+    final currentBgColor = isDarkMode
+        ? Theme.of(context).colorScheme.background
+        : backgroundColor;
     final cardColor = isDarkMode ? const Color(0xFF2C2C2E) : Colors.white;
     final currentTextColor = isDarkMode ? Colors.white : textColor;
 
@@ -119,7 +121,11 @@ class HomeView extends ConsumerWidget {
                           ],
                         ),
                         IconButton(
-                          icon: const Icon(Icons.notifications_none_rounded, color: Colors.white, size: 28),
+                          icon: const Icon(
+                            Icons.notifications_none_rounded,
+                            color: Colors.white,
+                            size: 28,
+                          ),
                           onPressed: () {
                             // TODO: Implementasi navigasi ke notifikasi
                           },
@@ -129,8 +135,13 @@ class HomeView extends ConsumerWidget {
                     const SizedBox(height: 30),
 
                     // Section Scan Barcode (Menggantikan Lacak Kiriman)
-                    _buildScanBarcodeCard(context, primaryBlue, cardColor, currentTextColor),
-                    
+                    _buildScanBarcodeCard(
+                      context,
+                      primaryBlue,
+                      cardColor,
+                      currentTextColor,
+                    ),
+
                     const SizedBox(height: 24),
 
                     // Title Ringkasan Pengiriman
@@ -156,7 +167,7 @@ class HomeView extends ConsumerWidget {
                       children: [
                         _buildSummaryCard(
                           context: context,
-                          ref:ref,
+                          ref: ref,
                           title: 'Dalam Proses',
                           count: '3',
                           icon: Icons.inventory_2_outlined,
@@ -220,13 +231,23 @@ class HomeView extends ConsumerWidget {
           ),
         ],
       ),
-      
+
       // Bottom Navigation Bar
-      bottomNavigationBar: _buildBottomNavigationBar(context, ref, primaryBlue, cardColor),
+      bottomNavigationBar: _buildBottomNavigationBar(
+        context,
+        ref,
+        primaryBlue,
+        cardColor,
+      ),
     );
   }
 
-  Widget _buildScanBarcodeCard(BuildContext context, Color primaryColor, Color cardColor, Color textColor) {
+  Widget _buildScanBarcodeCard(
+    BuildContext context,
+    Color primaryColor,
+    Color cardColor,
+    Color textColor,
+  ) {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -275,22 +296,23 @@ class HomeView extends ConsumerWidget {
               onPressed: () async {
                 final scannedData = await Navigator.push(
                   context,
-                  MaterialPageRoute(
-                    builder: (context) => const ScannerView(),
-                  ),
+                  MaterialPageRoute(builder: (context) => const ScannerView()),
                 );
 
                 // Jika berhasil mendapatkan data scan dari kamera
                 if (scannedData != null && context.mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                      content: Text('Berhasil Scan Resi: $scannedData', style: const TextStyle(fontFamily: 'Poppins')),
+                      content: Text(
+                        'Berhasil Scan Resi: $scannedData',
+                        style: const TextStyle(fontFamily: 'Poppins'),
+                      ),
                       backgroundColor: Colors.green,
                       behavior: SnackBarBehavior.floating,
                     ),
                   );
-                // Navigasi ke halaman pengiriman ketika discan
-                Navigator.pushNamed(context, '/pengiriman');
+                  // Navigasi ke halaman pengiriman ketika discan
+                  Navigator.pushNamed(context, '/pengiriman');
                 }
               },
               icon: const Icon(Icons.document_scanner, color: Colors.white),
@@ -440,17 +462,30 @@ class HomeView extends ConsumerWidget {
     );
   }
 
-  Widget _buildBottomNavigationBar(BuildContext context, WidgetRef ref, Color primaryColor, Color cardColor) {
+  Widget _buildBottomNavigationBar(
+    BuildContext context,
+    WidgetRef ref,
+    Color primaryColor,
+    Color cardColor,
+  ) {
     return BottomNavigationBar(
       type: BottomNavigationBarType.fixed,
       backgroundColor: cardColor,
       selectedItemColor: primaryColor,
       unselectedItemColor: const Color(0xFF8E8E93),
-      selectedLabelStyle: const TextStyle(fontFamily: 'Poppins', fontSize: 12, fontWeight: FontWeight.w500),
-      unselectedLabelStyle: const TextStyle(fontFamily: 'Poppins', fontSize: 12),
+      selectedLabelStyle: const TextStyle(
+        fontFamily: 'Poppins',
+        fontSize: 12,
+        fontWeight: FontWeight.w500,
+      ),
+      unselectedLabelStyle: const TextStyle(
+        fontFamily: 'Poppins',
+        fontSize: 12,
+      ),
       elevation: 16,
       onTap: (index) {
-        if (index == 2) { // Index 2 adalah tab Riwayat
+        if (index == 2) {
+          // Index 2 adalah tab Riwayat
           ref.read(statusFilterProvider.notifier).state = 'Semua';
           Navigator.pushNamed(context, '/riwayat');
         } else if (index == 1) {
@@ -493,18 +528,25 @@ class ScannerView extends StatefulWidget {
 
 class _ScannerViewState extends State<ScannerView> {
   final MobileScannerController cameraController = MobileScannerController();
-  bool _isScanned = false; 
+  bool _isScanned = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Scan Barcode', style: TextStyle(fontFamily: 'Poppins', fontWeight: FontWeight.w500, fontSize: 18)),
+        title: const Text(
+          'Scan Barcode',
+          style: TextStyle(
+            fontFamily: 'Poppins',
+            fontWeight: FontWeight.w500,
+            fontSize: 18,
+          ),
+        ),
         actions: [
           IconButton(
             color: Colors.white,
             icon: ValueListenableBuilder(
-              valueListenable: cameraController, 
+              valueListenable: cameraController,
               builder: (context, state, child) {
                 switch (state.torchState) {
                   case TorchState.off:
@@ -512,7 +554,7 @@ class _ScannerViewState extends State<ScannerView> {
                   case TorchState.on:
                     return const Icon(Icons.flash_on, color: Colors.orange);
                   default:
-                    return const Icon(Icons.flash_off, color: Colors.grey);  
+                    return const Icon(Icons.flash_off, color: Colors.grey);
                 }
               },
             ),
@@ -537,9 +579,9 @@ class _ScannerViewState extends State<ScannerView> {
                 final String? code = barcodes.first.rawValue;
                 if (code != null) {
                   setState(() {
-                    _isScanned = true; 
+                    _isScanned = true;
                   });
-                  
+
                   Navigator.pop(context, code);
                 }
               }
@@ -570,12 +612,12 @@ class _ScannerViewState extends State<ScannerView> {
                 ),
               ),
             ),
-          )
+          ),
         ],
       ),
     );
   }
-  
+
   @override
   void dispose() {
     cameraController.dispose();
@@ -592,9 +634,14 @@ class PengirimanViewDummy extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Halaman Pengiriman', style: TextStyle(fontFamily: 'Poppins'))),
+      appBar: AppBar(
+        title: const Text(
+          'Halaman Pengiriman',
+          style: TextStyle(fontFamily: 'Poppins'),
+        ),
+      ),
       body: const Center(
-        child: Text('Tampilan Daftar Pengiriman / Hasil Scan akan di sini.', style: TextStyle(fontFamily: 'Poppins')),
+        child: Text('halo')
       ),
     );
   }
@@ -606,9 +653,17 @@ class RiwayatViewDummy extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Halaman Riwayat', style: TextStyle(fontFamily: 'Poppins'))),
+      appBar: AppBar(
+        title: const Text(
+          'Halaman Riwayat',
+          style: TextStyle(fontFamily: 'Poppins'),
+        ),
+      ),
       body: const Center(
-        child: Text('Tampilan Riwayat Pengiriman Selesai/Batal akan di sini.', style: TextStyle(fontFamily: 'Poppins')),
+        child: Text(
+          'Tampilan Riwayat Pengiriman Selesai/Batal akan di sini.',
+          style: TextStyle(fontFamily: 'Poppins'),
+        ),
       ),
     );
   }
