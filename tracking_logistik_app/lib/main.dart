@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'dashboard/beranda.dart';
-import 'package:tracking_logistik_app/riwayat/riwayatpengiriman.dart';
+import 'Dashboard/beranda.dart';
+import 'package:tracking_logistik_app/Riwayat/riwayatpengiriman.dart';
 
 void main() {
   runApp(const SafeShipApp());
