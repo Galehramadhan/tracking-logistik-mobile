@@ -29,6 +29,9 @@ class AuthController extends ChangeNotifier {
         _role = UserRole.owner;
         _status = AuthStatus.success;
         notifyListeners();
+      default:
+        _role = UserRole.unknown;
+        _status = AuthStatus.initial;
     }
   }
 
@@ -42,11 +45,11 @@ class AuthController extends ChangeNotifier {
       // 4. Menggunakan Records / Tuple bawaan Dart 3 untuk membandingkan banyak variabel sekaligus
       final credential = (username, password); 
 
-      if (credential == ('supir1', '123')) { // 5. Cek username & password sekaligus dengan Pattern Matching
+      if (credential == ('gudangjambi', '123')) { // 5. Cek username & password sekaligus dengan Pattern Matching
         _role = UserRole.admingudang;
         _status = AuthStatus.success;
         await _prefs.setString('user_role', 'admingudang'); // 6. Simpan string menggunakan instance async
-      } else if (credential == ('bos', 'rahasia')) {
+      } else if (credential == ('frenly', 'rahasia')) {
         _role = UserRole.owner;
         _status = AuthStatus.success;
         await _prefs.setString('user_role', 'owner');
