@@ -4,6 +4,7 @@ import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:tracking_logistik_app/riwayat/riwayatpengiriman.dart';
 import 'package:tracking_logistik_app/riwayat/data.dart';
 import 'package:tracking_logistik_app/Pengiriman/pengiriman_main.dart';
+import 'package:tracking_logistik_app/profile/profilemain.dart';
 
 class SafeShipApp extends StatelessWidget {
   const SafeShipApp({super.key});
@@ -41,6 +42,7 @@ class SafeShipApp extends StatelessWidget {
         '/': (context) => const HomeView(),
         '/pengiriman': (context) => const ShipmentPage(),
         '/riwayat': (context) => const HistoryPage(),
+        '/profile': (context) => const ProfilePage(),
       },
     );
   }
@@ -489,6 +491,9 @@ class HomeView extends ConsumerWidget {
         } else if (index == 1) {
           Navigator.pushNamed(context, '/pengiriman');
         }
+        else if (index==3){
+          Navigator.pushNamed(context, '/profile');
+        } 
         // TODO: Implementasi perubahan tab aktif (currentIndex) jika menggunakan state lokal
       },
       items: const [
