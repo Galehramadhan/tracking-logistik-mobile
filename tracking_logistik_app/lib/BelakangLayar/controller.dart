@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart'; // Gunakan versi package terbaru (misal: ^2.3.2 ke atas)
+import 'package:shared_preferences/shared_preferences.dart';
 
-enum UserRole { admin, driver, unknown }
+enum UserRole { owner, admingudang, unknown }
 enum AuthStatus { initial, loading, success, error }
 
 class AuthController extends ChangeNotifier {
@@ -21,12 +21,12 @@ class AuthController extends ChangeNotifier {
 
     // 3. Menggunakan Switch-Case Dart 3 (tanpa perlu menulis 'break' lagi)
     switch (savedRole) {
-      case 'driver':
-        _role = UserRole.driver;
+      case 'admingudang':
+        _role = UserRole.admingudang;
         _status = AuthStatus.success;
         notifyListeners();
-      case 'admin':
-        _role = UserRole.admin;
+      case 'owner':
+        _role = UserRole.owner;
         _status = AuthStatus.success;
         notifyListeners();
     }
@@ -43,13 +43,13 @@ class AuthController extends ChangeNotifier {
       final credential = (username, password); 
 
       if (credential == ('supir1', '123')) { // 5. Cek username & password sekaligus dengan Pattern Matching
-        _role = UserRole.driver;
+        _role = UserRole.admingudang;
         _status = AuthStatus.success;
-        await _prefs.setString('user_role', 'driver'); // 6. Simpan string menggunakan instance async
+        await _prefs.setString('user_role', 'admingudang'); // 6. Simpan string menggunakan instance async
       } else if (credential == ('bos', 'rahasia')) {
-        _role = UserRole.admin;
+        _role = UserRole.owner;
         _status = AuthStatus.success;
-        await _prefs.setString('user_role', 'admin');
+        await _prefs.setString('user_role', 'owner');
       } else {
         _errorMessage = 'Username atau password salah!';
         _status = AuthStatus.error;
