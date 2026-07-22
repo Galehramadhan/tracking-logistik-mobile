@@ -18,45 +18,39 @@ class ShipmentDetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor:
-          const Color.fromARGB(255, 0, 0, 0),
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
 
+    return Scaffold(
+      backgroundColor: theme.scaffoldBackgroundColor,
       body: SafeArea(
         child: Column(
           children: [
-
             // HEADER
             Container(
               height: 85,
-              color: const Color(0xff0755C9),
+              color: colorScheme.primary,
               child: Row(
                 children: [
-
                   IconButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    icon: const Icon(
+                    onPressed: () => Navigator.pop(context),
+                    icon: Icon(
                       Icons.arrow_back_ios_new,
-                      color: Colors.white,
+                      color: colorScheme.onPrimary,
                     ),
                   ),
-
-                  const Expanded(
+                  Expanded(
                     child: Center(
                       child: Text(
-                        'Detail Pengiriman',
+                        "Detail Pengiriman",
                         style: TextStyle(
-                          color: Colors.white,
+                          color: colorScheme.onPrimary,
                           fontSize: 18,
-                          fontWeight:
-                              FontWeight.bold,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),
                   ),
-
                   const SizedBox(width: 48),
                 ],
               ),
@@ -64,87 +58,87 @@ class ShipmentDetailPage extends StatelessWidget {
 
             Expanded(
               child: ListView(
-                padding:
-                    const EdgeInsets.all(16),
+                padding: const EdgeInsets.all(16),
                 children: [
-
                   _infoCard(
-                    title: 'Nomor Resi',
-                    value: trackingNumber,
-                    icon: Icons.receipt_long,
+                    context,
+                    "Nomor Resi",
+                    trackingNumber,
+                    Icons.receipt_long,
                   ),
-
                   _infoCard(
-                    title: 'Pengirim',
-                    value: sender,
-                    icon: Icons.person_outline,
+                    context,
+                    "Pengirim",
+                    sender,
+                    Icons.person_outline,
                   ),
-
                   _infoCard(
-                    title: 'Penerima',
-                    value: receiver,
-                    icon: Icons.person,
+                    context,
+                    "Penerima",
+                    receiver,
+                    Icons.person,
                   ),
-
                   _infoCard(
-                    title: 'Alamat Tujuan',
-                    value: address,
-                    icon: Icons.location_on_outlined,
+                    context,
+                    "Alamat Tujuan",
+                    address,
+                    Icons.location_on_outlined,
                   ),
-
                   _infoCard(
-                    title: 'Berat Paket',
-                    value: weight,
-                    icon: Icons.inventory_2_outlined,
+                    context,
+                    "Berat Paket",
+                    weight,
+                    Icons.inventory_2_outlined,
                   ),
 
                   const SizedBox(height: 15),
 
                   Container(
-                    padding:
-                        const EdgeInsets.all(16),
+                    padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
-                      color: const Color.fromARGB(255, 36, 31, 31),
-                      borderRadius:
-                          BorderRadius.circular(14),
+                      color: theme.cardColor,
+                      borderRadius: BorderRadius.circular(14),
+                      border: Border.all(
+                        color: theme.dividerColor,
+                      ),
                     ),
                     child: Column(
-                      crossAxisAlignment:
-                          CrossAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-
-                        const Text(
-                          'Status Pengiriman',
-                          style: TextStyle(
-                            fontWeight:
-                                FontWeight.bold,
-                            fontSize: 16,
+                        Text(
+                          "Status Pengiriman",
+                          style: theme.textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
 
                         const SizedBox(height: 20),
 
                         _statusItem(
-                          'Pesanan dibuat',
-                          '08.00 WIB',
+                          context,
+                          "Pesanan dibuat",
+                          "08.00 WIB",
                           true,
                         ),
 
                         _statusItem(
-                          'Paket diambil driver',
-                          '08.15 WIB',
+                          context,
+                          "Paket diambil driver",
+                          "08.15 WIB",
                           true,
                         ),
 
                         _statusItem(
-                          'Dalam perjalanan',
-                          '08.30 WIB',
+                          context,
+                          "Dalam perjalanan",
+                          "08.30 WIB",
                           true,
                         ),
 
                         _statusItem(
-                          'Paket diterima',
-                          'Menunggu',
+                          context,
+                          "Paket diterima",
+                          "Menunggu",
                           false,
                         ),
                       ],
@@ -159,55 +153,51 @@ class ShipmentDetailPage extends StatelessWidget {
     );
   }
 
-  Widget _infoCard({
-    required String title,
-    required String value,
-    required IconData icon,
-  }) {
+  Widget _infoCard(
+    BuildContext context,
+    String title,
+    String value,
+    IconData icon,
+  ) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
     return Container(
-      margin:
-          const EdgeInsets.only(bottom: 12),
+      margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: const Color.fromARGB(255, 32, 28, 28),
-        borderRadius:
-            BorderRadius.circular(14),
+        color: theme.cardColor,
+        borderRadius: BorderRadius.circular(14),
         border: Border.all(
-          color: const Color(0xffE5E7EB),
+          color: theme.dividerColor,
         ),
       ),
       child: Row(
         children: [
-
           Icon(
             icon,
-            color: const Color(0xff0755C9),
+            color: colorScheme.primary,
           ),
-
           const SizedBox(width: 14),
-
-          Column(
-            crossAxisAlignment:
-                CrossAxisAlignment.start,
-            children: [
-
-              Text(
-                title,
-                style: const TextStyle(
-                  color: Colors.grey,
-                  fontSize: 11,
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: Colors.grey,
+                  ),
                 ),
-              ),
-
-              const SizedBox(height: 5),
-
-              Text(
-                value,
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
+                const SizedBox(height: 5),
+                Text(
+                  value,
+                  style: theme.textTheme.bodyLarge?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ],
       ),
@@ -215,23 +205,22 @@ class ShipmentDetailPage extends StatelessWidget {
   }
 
   Widget _statusItem(
+    BuildContext context,
     String title,
     String time,
     bool active,
   ) {
+    final theme = Theme.of(context);
+
     return Padding(
-      padding:
-          const EdgeInsets.only(bottom: 18),
+      padding: const EdgeInsets.only(bottom: 18),
       child: Row(
         children: [
-
           Icon(
             active
                 ? Icons.check_circle
                 : Icons.radio_button_unchecked,
-            color: active
-                ? Colors.green
-                : Colors.grey,
+            color: active ? Colors.green : Colors.grey,
           ),
 
           const SizedBox(width: 12),
@@ -239,19 +228,17 @@ class ShipmentDetailPage extends StatelessWidget {
           Expanded(
             child: Text(
               title,
-              style: TextStyle(
-                fontWeight: active
-                    ? FontWeight.bold
-                    : FontWeight.normal,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                fontWeight:
+                    active ? FontWeight.bold : FontWeight.normal,
               ),
             ),
           ),
 
           Text(
             time,
-            style: const TextStyle(
+            style: theme.textTheme.bodySmall?.copyWith(
               color: Colors.grey,
-              fontSize: 11,
             ),
           ),
         ],
