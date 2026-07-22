@@ -18,7 +18,6 @@ class ProfilePage extends StatelessWidget {
         child: Column(
           children: [
             //================ HEADER =================//
-
             Container(
               width: double.infinity,
               padding: const EdgeInsets.only(top: 10, bottom: 30),
@@ -33,22 +32,15 @@ class ProfilePage extends StatelessWidget {
                 children: [
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Row(
-                      children: [
-                        const Expanded(
-                          child: Center(
-                            child: Text(
-                              "Profil Admin",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
+                    child: Center(
+                      child: Text(
+                        "Profil Admin",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
                         ),
-                        const SizedBox(width: 48),
-                      ],
+                      ),
                     ),
                   ),
 
@@ -103,10 +95,7 @@ class ProfilePage extends StatelessWidget {
 
                       const Text(
                         "ADMN00125",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 17,
-                        ),
+                        style: TextStyle(color: Colors.white, fontSize: 17),
                       ),
                     ],
                   ),
@@ -120,9 +109,7 @@ class ProfilePage extends StatelessWidget {
                       SizedBox(width: 8),
                       Text(
                         "0812 3456 7890",
-                        style: TextStyle(
-                          color: Colors.white,
-                        ),
+                        style: TextStyle(color: Colors.white),
                       ),
                     ],
                   ),
@@ -136,9 +123,7 @@ class ProfilePage extends StatelessWidget {
                       SizedBox(width: 8),
                       Text(
                         "budi@email.com",
-                        style: TextStyle(
-                          color: Colors.white,
-                        ),
+                        style: TextStyle(color: Colors.white),
                       ),
                     ],
                   ),
@@ -149,7 +134,6 @@ class ProfilePage extends StatelessWidget {
             const SizedBox(height: 15),
 
             //================ MENU =================//
-
             Expanded(
               child: SingleChildScrollView(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -170,8 +154,7 @@ class ProfilePage extends StatelessWidget {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (_) =>
-                                      const DriverDetailPage(),
+                                  builder: (_) => const DriverDetailPage(),
                                 ),
                               );
                             },
@@ -186,8 +169,7 @@ class ProfilePage extends StatelessWidget {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (_) =>
-                                      const KendaraanPage(),
+                                  builder: (_) => const KendaraanPage(),
                                 ),
                               );
                             },
@@ -202,8 +184,7 @@ class ProfilePage extends StatelessWidget {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (_) =>
-                                      const DokumenPage(),
+                                  builder: (_) => const DokumenPage(),
                                 ),
                               );
                             },
@@ -217,9 +198,8 @@ class ProfilePage extends StatelessWidget {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (_) =>
-                                      const NotifikasiPage(),
-                                ),  
+                                  builder: (_) => const NotifikasiPage(),
+                                ),
                               );
                             },
                           ),
@@ -232,8 +212,7 @@ class ProfilePage extends StatelessWidget {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (_) =>
-                                      const BantuanPage(),
+                                  builder: (_) => const BantuanPage(),
                                 ),
                               );
                             },
@@ -247,8 +226,7 @@ class ProfilePage extends StatelessWidget {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (_) =>
-                                      const TentangAplikasiPage(),
+                                  builder: (_) => const TentangAplikasiPage(),
                                 ),
                               );
                             },
@@ -270,16 +248,14 @@ class ProfilePage extends StatelessWidget {
 
                           // 2. Lempar ke halaman login dan HANCURKAN semua riwayat halaman
                           Navigator.pushNamedAndRemoveUntil(
-                            context, 
-                            '/login', 
-                            (route) => false, // (route) => false artinya membuang semua tumpukan kartu
+                            context,
+                            '/login',
+                            (route) =>
+                                false, // (route) => false artinya membuang semua tumpukan kartu
                           );
                         },
 
-                        icon: const Icon(
-                          Icons.logout,
-                          color: Colors.red,
-                        ),
+                        icon: const Icon(Icons.logout, color: Colors.red),
                         label: const Text(
                           "Logout",
                           style: TextStyle(
@@ -288,15 +264,10 @@ class ProfilePage extends StatelessWidget {
                           ),
                         ),
                         style: OutlinedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(
-                            vertical: 15,
-                          ),
-                          side: const BorderSide(
-                            color: Colors.red,
-                          ),
+                          padding: const EdgeInsets.symmetric(vertical: 15),
+                          side: const BorderSide(color: Colors.red),
                           shape: RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.circular(15),
+                            borderRadius: BorderRadius.circular(15),
                           ),
                         ),
                       ),
@@ -323,26 +294,16 @@ class ProfilePage extends StatelessWidget {
     return Column(
       children: [
         ListTile(
-          leading: Icon(
-            icon,
-            color: Colors.blue,
-          ),
+          leading: Icon(icon, color: Colors.blue),
           title: Text(
             title,
-            style: const TextStyle(
-              fontWeight: FontWeight.w500,
-            ),
+            style: const TextStyle(fontWeight: FontWeight.w500),
           ),
           trailing: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
               if (trailing != null)
-                Text(
-                  trailing,
-                  style: const TextStyle(
-                    color: Colors.grey,
-                  ),
-                ),
+                Text(trailing, style: const TextStyle(color: Colors.grey)),
               const SizedBox(width: 5),
               const Icon(Icons.chevron_right),
             ],
