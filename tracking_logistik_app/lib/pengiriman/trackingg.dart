@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
+
 import 'detail_pengiriman.dart';
 
 class TrackingPage extends StatefulWidget {
@@ -20,13 +21,10 @@ class TrackingPage extends StatefulWidget {
   });
 
   @override
-  State<TrackingPage> createState() =>
-      _TrackingPageState();
+  State<TrackingPage> createState() => _TrackingPageState();
 }
 
-class _TrackingPageState
-    extends State<TrackingPage> {
-
+class _TrackingPageState extends State<TrackingPage> {
   GoogleMapController? mapController;
 
   static const LatLng driverLocation =
@@ -36,34 +34,29 @@ class _TrackingPageState
       LatLng(-1.6099, 103.6065);
 
   final Set<Marker> markers = {
-
     const Marker(
-      markerId: MarkerId('driver'),
+      markerId: MarkerId("driver"),
       position: driverLocation,
       infoWindow: InfoWindow(
-        title: 'Mobil Driver',
-        snippet: 'Sedang berjalan',
+        title: "Mobil Driver",
+        snippet: "Sedang berjalan",
       ),
     ),
-
     const Marker(
-      markerId: MarkerId('destination'),
+      markerId: MarkerId("destination"),
       position: destinationLocation,
       infoWindow: InfoWindow(
-        title: 'Tujuan Pengiriman',
+        title: "Tujuan Pengiriman",
       ),
     ),
   };
 
   Future<void> openMaps() async {
-
     final Uri url = Uri.parse(
-      'https://www.google.com/maps/dir/?api=1'
-      '&origin=${driverLocation.latitude},'
-      '${driverLocation.longitude}'
-      '&destination=${destinationLocation.latitude},'
-      '${destinationLocation.longitude}'
-      '&travelmode=driving',
+      "https://www.google.com/maps/dir/?api=1"
+      "&origin=${driverLocation.latitude},${driverLocation.longitude}"
+      "&destination=${destinationLocation.latitude},${destinationLocation.longitude}"
+      "&travelmode=driving",
     );
 
     if (await canLaunchUrl(url)) {
@@ -76,76 +69,67 @@ class _TrackingPageState
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor:
-          const Color.fromARGB(255, 6, 8, 11),
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
 
+    return Scaffold(
+      backgroundColor: theme.scaffoldBackgroundColor,
       body: SafeArea(
         child: Column(
           children: [
-
-            // HEADER
             Container(
               height: 85,
-              color: const Color(0xff0755C9),
+              color: colorScheme.primary,
               child: Row(
                 children: [
-
                   IconButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    icon: const Icon(
+                    onPressed: () => Navigator.pop(context),
+                    icon: Icon(
                       Icons.arrow_back_ios_new,
-                      color: Colors.white,
+                      color: colorScheme.onPrimary,
                     ),
                   ),
-
-                  const Expanded(
+                  Expanded(
                     child: Center(
                       child: Text(
-                        'Lacak Pengiriman',
+                        "Lacak Pengiriman",
                         style: TextStyle(
-                          color: Colors.white,
+                          color: colorScheme.onPrimary,
+                          fontWeight: FontWeight.bold,
                           fontSize: 18,
-                          fontWeight:
-                              FontWeight.bold,
                         ),
                       ),
                     ),
                   ),
-
                   const SizedBox(width: 48),
                 ],
               ),
             ),
-
             Expanded(
               child: SingleChildScrollView(
                 child: Column(
                   children: [
+                    const SizedBox(height: 16),
+
+                    _trackingHeader(context),
 
                     const SizedBox(height: 16),
 
-                    _trackingHeader(),
+                    _map(context),
 
-                    const SizedBox(height: 14),
+                    const SizedBox(height: 16),
 
-                    _map(),
+                    _vehicleCard(context),
 
-                    const SizedBox(height: 14),
+                    const SizedBox(height: 16),
 
-                    _vehicleCard(),
+                    _routeCard(context),
 
-                    const SizedBox(height: 14),
+                    const SizedBox(height: 16),
 
-                    _routeCard(),
+                    _detailButton(context),
 
-                    const SizedBox(height: 14),
-
-                    _detailButton(),
-
-                    const SizedBox(height: 25),
+                    const SizedBox(height: 24),
                   ],
                 ),
               ),
@@ -156,352 +140,423 @@ class _TrackingPageState
     );
   }
 
-  Widget _trackingHeader() {
-    return Container(
-      margin:
-          const EdgeInsets.symmetric(
-        horizontal: 16,
+  Widget _trackingHeader(BuildContext context) {
+  final theme = Theme.of(context);
+  final colorScheme = theme.colorScheme;
+
+  return Container(
+    margin: const EdgeInsets.symmetric(horizontal: 16),
+    padding: const EdgeInsets.all(16),
+    decoration: BoxDecoration(
+      color: theme.cardColor,
+      borderRadius: BorderRadius.circular(16),
+      border: Border.all(
+        color: theme.dividerColor,
       ),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color:  const Color.fromARGB(255, 40, 31, 31),
-        borderRadius:
-            BorderRadius.circular(14),
-      ),
-      child: Row(
-        children: [
-
-          Container(
-            width: 48,
-            height: 48,
-            decoration: BoxDecoration(
-              color: const Color(0xffE8F1FF),
-              borderRadius:
-                  BorderRadius.circular(12),
-            ),
-            child: const Icon(
-              Icons.local_shipping,
-              color: Color(0xff0755C9),
-            ),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.black.withOpacity(0.05),
+          blurRadius: 8,
+          offset: const Offset(0, 2),
+        ),
+      ],
+    ),
+    child: Row(
+      children: [
+        Container(
+          width: 52,
+          height: 52,
+          decoration: BoxDecoration(
+            color: colorScheme.primary.withOpacity(.12),
+            borderRadius: BorderRadius.circular(14),
           ),
-
-          const SizedBox(width: 12),
-
-          Expanded(
-            child: Column(
-              crossAxisAlignment:
-                  CrossAxisAlignment.start,
-              children: [
-
-                Text(
-                  widget.trackingNumber,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                  ),
-                ),
-
-                const SizedBox(height: 4),
-
-                const Text(
-                  'Pengiriman sedang berlangsung',
-                  style: TextStyle(
-                    color: Colors.grey,
-                    fontSize: 12,
-                  ),
-                ),
-              ],
-            ),
+          child: Icon(
+            Icons.local_shipping,
+            color: colorScheme.primary,
           ),
+        ),
 
-          Container(
-            padding:
-                const EdgeInsets.symmetric(
-              horizontal: 10,
-              vertical: 6,
-            ),
-            decoration: BoxDecoration(
-              color: const Color(0xffE8F7ED),
-              borderRadius:
-                  BorderRadius.circular(20),
-            ),
-            child: const Text(
-              'Aktif',
-              style: TextStyle(
-                color: Colors.green,
-                fontSize: 11,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+        const SizedBox(width: 14),
 
-  Widget _map() {
-    return Container(
-      margin:
-          const EdgeInsets.symmetric(
-        horizontal: 16,
-      ),
-      height: 280,
-      clipBehavior: Clip.antiAlias,
-      decoration: BoxDecoration(
-        borderRadius:
-            BorderRadius.circular(14),
-      ),
-      child: Stack(
-        children: [
-
-          GoogleMap(
-            initialCameraPosition:
-                const CameraPosition(
-              target: driverLocation,
-              zoom: 14,
-            ),
-            markers: markers,
-            zoomControlsEnabled: false,
-            myLocationButtonEnabled: false,
-          ),
-
-          Positioned(
-            bottom: 12,
-            right: 12,
-            child: ElevatedButton.icon(
-              onPressed: openMaps,
-              icon: const Icon(
-                Icons.navigation,
-                color: Colors.white,
-              ),
-              label: const Text(
-                'Buka Google Maps',
-                style: TextStyle(
-                  color: Colors.white,
-                ),
-              ),
-              style:
-                  ElevatedButton.styleFrom(
-                backgroundColor:
-                    const Color(0xff0755C9),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _vehicleCard() {
-    return _card(
-      title: 'Informasi Kendaraan',
-      child: Row(
-        children: [
-
-          Container(
-            width: 60,
-            height: 60,
-            decoration: BoxDecoration(
-              color: const Color(0xffE8F1FF),
-              borderRadius:
-                  BorderRadius.circular(14),
-            ),
-            child: const Icon(
-              Icons.local_shipping,
-              color: Color(0xff0755C9),
-              size: 32,
-            ),
-          ),
-
-          const SizedBox(width: 14),
-
-          const Column(
-            crossAxisAlignment:
-                CrossAxisAlignment.start,
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-
               Text(
-                'Mitsubishi Colt Diesel',
-                style: TextStyle(
+                widget.trackingNumber,
+                style: theme.textTheme.titleMedium?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
               ),
 
-              SizedBox(height: 5),
+              const SizedBox(height: 4),
 
               Text(
-                'B 1234 ABC',
-                style: TextStyle(
+                "Pengiriman sedang berlangsung",
+                style: theme.textTheme.bodySmall?.copyWith(
                   color: Colors.grey,
-                ),
-              ),
-
-              SizedBox(height: 4),
-
-              Text(
-                'Truk Box • 4.000 Kg',
-                style: TextStyle(
-                  color: Colors.grey,
-                  fontSize: 12,
                 ),
               ),
             ],
           ),
-        ],
-      ),
-    );
-  }
-
-  Widget _routeCard() {
-    return _card(
-      title: 'Rute Pengiriman',
-      child: Column(
-        children: [
-
-          _routeItem(
-            Icons.radio_button_checked,
-            Colors.blue,
-            'Lokasi Driver',
-            'Sedang menuju tujuan',
-          ),
-
-          const SizedBox(height: 15),
-
-          _routeItem(
-            Icons.location_on,
-            Colors.red,
-            'Tujuan',
-            widget.receiver,
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _routeItem(
-    IconData icon,
-    Color color,
-    String title,
-    String subtitle,
-  ) {
-    return Row(
-      children: [
-
-        Icon(
-          icon,
-          color: color,
         ),
 
-        const SizedBox(width: 12),
+        Container(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 12,
+            vertical: 6,
+          ),
+          decoration: BoxDecoration(
+            color: Colors.green.withOpacity(.15),
+            borderRadius: BorderRadius.circular(30),
+          ),
+          child: const Text(
+            "Aktif",
+            style: TextStyle(
+              color: Colors.green,
+              fontWeight: FontWeight.bold,
+              fontSize: 11,
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
+}
 
-        Column(
+Widget _map(BuildContext context) {
+  final colorScheme = Theme.of(context).colorScheme;
+
+  return Container(
+    margin: const EdgeInsets.symmetric(horizontal: 16),
+    height: 290,
+    clipBehavior: Clip.antiAlias,
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(18),
+    ),
+    child: Stack(
+      children: [
+        GoogleMap(
+          initialCameraPosition: const CameraPosition(
+            target: driverLocation,
+            zoom: 14,
+          ),
+          markers: markers,
+          zoomControlsEnabled: false,
+          myLocationButtonEnabled: false,
+          onMapCreated: (controller) {
+            mapController = controller;
+          },
+        ),
+
+        Positioned(
+          top: 12,
+          right: 12,
+          child: Card(
+            elevation: 3,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: IconButton(
+              icon: const Icon(Icons.my_location),
+              onPressed: () {
+                mapController?.animateCamera(
+                  CameraUpdate.newLatLngZoom(
+                    driverLocation,
+                    15,
+                  ),
+                );
+              },
+            ),
+          ),
+        ),
+
+        Positioned(
+          bottom: 14,
+          left: 14,
+          right: 14,
+          child: ElevatedButton.icon(
+            onPressed: openMaps,
+            icon: const Icon(Icons.navigation),
+            label: const Text("Buka Google Maps"),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: colorScheme.primary,
+              foregroundColor: colorScheme.onPrimary,
+              minimumSize: const Size.fromHeight(50),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(14),
+              ),
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
+}
+Widget _vehicleCard(BuildContext context) {
+  return _card(
+    context: context,
+    title: "Informasi Kendaraan",
+    child: Row(
+      children: [
+        Container(
+          width: 60,
+          height: 60,
+          decoration: BoxDecoration(
+            color: Theme.of(context)
+                .colorScheme
+                .primary
+                .withOpacity(.12),
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: Icon(
+            Icons.local_shipping,
+            color: Theme.of(context).colorScheme.primary,
+            size: 30,
+          ),
+        ),
+
+        const SizedBox(width: 16),
+
+        Expanded(
+          child: Column(
+            crossAxisAlignment:
+                CrossAxisAlignment.start,
+            children: [
+              Text(
+                "Mitsubishi Colt Diesel",
+                style: Theme.of(context)
+                    .textTheme
+                    .titleMedium
+                    ?.copyWith(
+                      fontWeight:
+                          FontWeight.bold,
+                    ),
+              ),
+
+              const SizedBox(height: 5),
+
+              Text(
+                "B 1234 ABC",
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyMedium
+                    ?.copyWith(
+                      color: Colors.grey,
+                    ),
+              ),
+
+              const SizedBox(height: 4),
+
+              Text(
+                "Truk Box • 4.000 Kg",
+                style: Theme.of(context)
+                    .textTheme
+                    .bodySmall
+                    ?.copyWith(
+                      color: Colors.grey,
+                    ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+Widget _routeCard(BuildContext context) {
+  return _card(
+    context: context,
+    title: "Rute Pengiriman",
+    child: Column(
+      children: [
+        _routeItem(
+          context,
+          Icons.radio_button_checked,
+          Colors.blue,
+          "Lokasi Driver",
+          "Sedang menuju tujuan",
+        ),
+
+        const Padding(
+          padding: EdgeInsets.only(
+            left: 11,
+            top: 4,
+            bottom: 4,
+          ),
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: SizedBox(
+              height: 28,
+              child: VerticalDivider(
+                thickness: 2,
+              ),
+            ),
+          ),
+        ),
+
+        _routeItem(
+          context,
+          Icons.location_on,
+          Colors.red,
+          "Tujuan",
+          widget.receiver,
+        ),
+      ],
+    ),
+  );
+}
+
+Widget _routeItem(
+  BuildContext context,
+  IconData icon,
+  Color color,
+  String title,
+  String subtitle,
+) {
+  return Row(
+    crossAxisAlignment:
+        CrossAxisAlignment.start,
+    children: [
+      Icon(
+        icon,
+        color: color,
+        size: 24,
+      ),
+
+      const SizedBox(width: 12),
+
+      Expanded(
+        child: Column(
           crossAxisAlignment:
               CrossAxisAlignment.start,
           children: [
-
             Text(
               title,
-              style: const TextStyle(
-                color: Colors.grey,
-                fontSize: 11,
-              ),
+              style: Theme.of(context)
+                  .textTheme
+                  .bodySmall
+                  ?.copyWith(
+                    color: Colors.grey,
+                  ),
             ),
 
-            const SizedBox(height: 3),
+            const SizedBox(height: 2),
 
             Text(
               subtitle,
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-              ),
+              style: Theme.of(context)
+                  .textTheme
+                  .titleSmall
+                  ?.copyWith(
+                    fontWeight:
+                        FontWeight.bold,
+                  ),
             ),
           ],
         ),
-      ],
-    );
-  }
-
-  Widget _detailButton() {
-    return Padding(
-      padding:
-          const EdgeInsets.symmetric(
-        horizontal: 16,
       ),
-      child: SizedBox(
-        width: double.infinity,
-        height: 50,
-        child: ElevatedButton(
-          onPressed: () {
+    ],
+  );
+}
 
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) =>
-                    ShipmentDetailPage(
-                  trackingNumber:
-                      widget.trackingNumber,
-                  sender: widget.sender,
-                  receiver: widget.receiver,
-                  address: widget.address,
-                  weight: widget.weight,
-                ),
+Widget _detailButton(BuildContext context) {
+  final colorScheme =
+      Theme.of(context).colorScheme;
+
+  return Padding(
+    padding: const EdgeInsets.symmetric(
+      horizontal: 16,
+    ),
+    child: SizedBox(
+      width: double.infinity,
+      height: 52,
+      child: ElevatedButton.icon(
+        icon: const Icon(
+          Icons.receipt_long,
+        ),
+        label: const Text(
+          "Lihat Detail Pengiriman",
+        ),
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (_) =>
+                  ShipmentDetailPage(
+                trackingNumber:
+                    widget.trackingNumber,
+                sender: widget.sender,
+                receiver: widget.receiver,
+                address: widget.address,
+                weight: widget.weight,
               ),
-            );
-
-          },
-          style:
-              ElevatedButton.styleFrom(
-            backgroundColor:
-                const Color(0xff0755C9),
-          ),
-          child: const Text(
-            'Lihat Detail Pengiriman',
-            style: TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
             ),
+          );
+        },
+        style: ElevatedButton.styleFrom(
+          backgroundColor:
+              colorScheme.primary,
+          foregroundColor:
+              colorScheme.onPrimary,
+          shape:
+              RoundedRectangleBorder(
+            borderRadius:
+                BorderRadius.circular(14),
           ),
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 
-  Widget _card({
-    required String title,
-    required Widget child,
-  }) {
-    return Container(
-      margin:
-          const EdgeInsets.symmetric(
-        horizontal: 16,
+Widget _card({
+  required BuildContext context,
+  required String title,
+  required Widget child,
+}) {
+  final theme = Theme.of(context);
+
+  return Container(
+    margin: const EdgeInsets.symmetric(
+      horizontal: 16,
+    ),
+    padding: const EdgeInsets.all(16),
+    decoration: BoxDecoration(
+      color: theme.cardColor,
+      borderRadius:
+          BorderRadius.circular(16),
+      border: Border.all(
+        color: theme.dividerColor,
       ),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color:  const Color.fromARGB(255, 40, 31, 31),
-        borderRadius:
-            BorderRadius.circular(14),
-        border: Border.all(
-          color: const Color(0xffE5E7EB),
+      boxShadow: [
+        BoxShadow(
+          color:
+              Colors.black.withOpacity(.05),
+          blurRadius: 8,
+          offset: const Offset(0, 2),
         ),
-      ),
-      child: Column(
-        crossAxisAlignment:
-            CrossAxisAlignment.start,
-        children: [
-
-          Text(
-            title,
-            style: const TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 15,
-            ),
+      ],
+    ),
+    child: Column(
+      crossAxisAlignment:
+          CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          style: theme.textTheme.titleMedium
+              ?.copyWith(
+            fontWeight:
+                FontWeight.bold,
           ),
+        ),
 
-          const SizedBox(height: 15),
+        const SizedBox(height: 16),
 
-          child,
-        ],
-      ),
-    );
-  }
+        child,
+      ],
+    ),
+  );
+}
 }

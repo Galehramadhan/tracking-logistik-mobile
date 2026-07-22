@@ -6,19 +6,13 @@ class ShipmentPage extends StatefulWidget {
   const ShipmentPage({super.key});
 
   @override
-  State<ShipmentPage> createState() =>
-      _ShipmentPageState();
+  State<ShipmentPage> createState() => _ShipmentPageState();
 }
 
-class _ShipmentPageState
-    extends State<ShipmentPage> {
-
-  // STATUS YANG DIPILIH
+class _ShipmentPageState extends State<ShipmentPage> {
   String selectedStatus = 'Ditugaskan';
 
-  // DATA PENGIRIMAN
   final List<Map<String, String>> shipments = [
-
     {
       'trackingNumber': 'TRK-2405-0001',
       'status': 'Sedang Diantar',
@@ -28,7 +22,6 @@ class _ShipmentPageState
       'weight': '3 Kg',
       'estimate': '09.30 WIB',
     },
-
     {
       'trackingNumber': 'TRK-2405-0002',
       'status': 'Ditugaskan',
@@ -38,7 +31,6 @@ class _ShipmentPageState
       'weight': '5 Kg',
       'estimate': '10.15 WIB',
     },
-
     {
       'trackingNumber': 'TRK-2405-0003',
       'status': 'Ditugaskan',
@@ -48,7 +40,6 @@ class _ShipmentPageState
       'weight': '2 Kg',
       'estimate': '11.00 WIB',
     },
-
     {
       'trackingNumber': 'TRK-2405-0004',
       'status': 'Selesai',
@@ -68,127 +59,91 @@ class _ShipmentPageState
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
 
-    // FILTER DATA BERDASARKAN STATUS
-    final filteredShipments =
-        shipments.where((shipment) {
-      return shipment['status'] ==
-          selectedStatus;
-    }).toList();
+    final filteredShipments = shipments
+        .where((shipment) => shipment['status'] == selectedStatus)
+        .toList();
 
     return Scaffold(
-      backgroundColor:
-          const Color.fromARGB(255, 2, 4, 8),
-
+      backgroundColor: theme.scaffoldBackgroundColor,
       body: SafeArea(
         child: Column(
           children: [
-
-            // =========================
-            // HEADER
-            // =========================
-
             Container(
               height: 95,
-              color: const Color(0xff0755C9),
+              color: colorScheme.primary,
               child: Row(
                 children: [
-
                   IconButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    icon: const Icon(
+                    onPressed: () => Navigator.pop(context),
+                    icon: Icon(
                       Icons.arrow_back_ios_new,
-                      color: Colors.white,
+                      color: colorScheme.onPrimary,
                     ),
                   ),
-
-                  const Expanded(
+                  Expanded(
                     child: Center(
                       child: Text(
-                        'Tugas Pengiriman',
+                        "Tugas Pengiriman",
                         style: TextStyle(
-                          color: Colors.white,
+                          color: colorScheme.onPrimary,
                           fontSize: 18,
-                          fontWeight:
-                              FontWeight.bold,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),
                   ),
-
                   const SizedBox(width: 48),
                 ],
               ),
             ),
 
-            // =========================
-            // FILTER STATUS BUTTON
-            // =========================
-
             Container(
-              color: const Color.fromARGB(255, 6, 4, 4),
-              padding:
-                  const EdgeInsets.symmetric(
+              color: theme.scaffoldBackgroundColor,
+              padding: const EdgeInsets.symmetric(
                 horizontal: 10,
                 vertical: 12,
               ),
               child: Row(
                 children: statusList.map((status) {
-
-                  final bool isSelected =
-                      selectedStatus == status;
+                  final isSelected = selectedStatus == status;
 
                   return Expanded(
                     child: Padding(
                       padding:
-                          const EdgeInsets.symmetric(
-                        horizontal: 4,
-                      ),
+                          const EdgeInsets.symmetric(horizontal: 4),
                       child: GestureDetector(
                         onTap: () {
-
                           setState(() {
                             selectedStatus = status;
                           });
-
                         },
                         child: AnimatedContainer(
                           duration:
-                              const Duration(
-                            milliseconds: 200,
-                          ),
+                              const Duration(milliseconds: 200),
                           padding:
-                              const EdgeInsets.symmetric(
-                            vertical: 10,
-                          ),
+                              const EdgeInsets.symmetric(vertical: 10),
                           decoration: BoxDecoration(
                             color: isSelected
-                                ? const Color(
-                                    0xff0755C9)
-                                : Colors.white,
+                                ? colorScheme.primary
+                                : theme.cardColor,
                             borderRadius:
-                                BorderRadius.circular(
-                              20,
-                            ),
+                                BorderRadius.circular(20),
                             border: Border.all(
                               color: isSelected
-                                  ? const Color(
-                                      0xff0755C9)
-                                  : const Color(
-                                      0xffE5E7EB),
+                                  ? colorScheme.primary
+                                  : theme.dividerColor,
                             ),
                           ),
                           child: Text(
                             status,
-                            textAlign:
-                                TextAlign.center,
+                            textAlign: TextAlign.center,
                             style: TextStyle(
                               color: isSelected
-                                  ? Colors.white
-                                  : Colors.grey
-                                      .shade700,
+                                  ? colorScheme.onPrimary
+                                  : theme.textTheme.bodyMedium?.color,
                               fontSize: 11,
                               fontWeight: isSelected
                                   ? FontWeight.bold
@@ -203,55 +158,34 @@ class _ShipmentPageState
               ),
             ),
 
-            // =========================
-            // LIST PENGIRIMAN
-            // =========================
-
             Expanded(
               child: filteredShipments.isEmpty
-                  ? const Center(
+                  ? Center(
                       child: Text(
-                        'Belum ada pengiriman',
-                        style: TextStyle(
-                          color: Colors.grey,
-                          fontSize: 14,
-                        ),
+                        "Belum ada pengiriman",
+                        style: theme.textTheme.bodyMedium,
                       ),
                     )
                   : ListView.builder(
-                      padding:
-                          const EdgeInsets.all(16),
-                      itemCount:
-                          filteredShipments.length,
-                      itemBuilder:
-                          (context, index) {
-
+                      padding: const EdgeInsets.all(16),
+                      itemCount: filteredShipments.length,
+                      itemBuilder: (context, index) {
                         final shipment =
-                            filteredShipments[
-                                index];
+                            filteredShipments[index];
 
                         return Padding(
                           padding:
-                              const EdgeInsets.only(
-                            bottom: 14,
-                          ),
+                              const EdgeInsets.only(bottom: 14),
                           child: _shipmentCard(
                             context: context,
                             trackingNumber:
-                                shipment[
-                                    'trackingNumber']!,
-                            status:
-                                shipment['status']!,
-                            sender:
-                                shipment['sender']!,
-                            receiver:
-                                shipment['receiver']!,
-                            address:
-                                shipment['address']!,
-                            weight:
-                                shipment['weight']!,
-                            estimate:
-                                shipment['estimate']!,
+                                shipment["trackingNumber"]!,
+                            status: shipment["status"]!,
+                            sender: shipment["sender"]!,
+                            receiver: shipment["receiver"]!,
+                            address: shipment["address"]!,
+                            weight: shipment["weight"]!,
+                            estimate: shipment["estimate"]!,
                           ),
                         );
                       },
@@ -262,261 +196,234 @@ class _ShipmentPageState
       ),
     );
   }
-
   // =====================================================
   // CARD PENGIRIMAN
   // =====================================================
 
-  Widget _shipmentCard({
-    required BuildContext context,
-    required String trackingNumber,
-    required String status,
-    required String sender,
-    required String receiver,
-    required String address,
-    required String weight,
-    required String estimate,
-  }) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: const Color.fromARGB(255, 25, 21, 21),
-        borderRadius:
-            BorderRadius.circular(14),
-        border: Border.all(
-          color: const Color.fromARGB(255, 255, 251, 251),
-        ),
-      ),
-      child: Column(
-        crossAxisAlignment:
-            CrossAxisAlignment.start,
-        children: [
+ Widget _shipmentCard({
+  required BuildContext context,
+  required String trackingNumber,
+  required String status,
+  required String sender,
+  required String receiver,
+  required String address,
+  required String weight,
+  required String estimate,
+}) {
+  final theme = Theme.of(context);
+  final colorScheme = theme.colorScheme;
 
-          // =========================
-          // NOMOR RESI & STATUS
-          // =========================
-
-          Row(
-            mainAxisAlignment:
-                MainAxisAlignment.spaceBetween,
-            children: [
-
-              Text(
-                trackingNumber,
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                ),
-              ),
-
-              Container(
-                padding:
-                    const EdgeInsets.symmetric(
-                  horizontal: 10,
-                  vertical: 6,
-                ),
-                decoration: BoxDecoration(
-                  color: status == 'Selesai'
-                      ? const Color(0xffE8F7ED)
-                      : status ==
-                              'Sedang Diantar'
-                          ? const Color(
-                              0xffE8F1FF)
-                          : const Color(
-                              0xfffff4df),
-                  borderRadius:
-                      BorderRadius.circular(20),
-                ),
-                child: Text(
-                  status,
-                  style: TextStyle(
-                    color: status == 'Selesai'
-                        ? Colors.green
-                        : status ==
-                                'Sedang Diantar'
-                            ? const Color(
-                                0xff0755C9)
-                            : Colors.orange,
-                    fontSize: 11,
-                    fontWeight:
-                        FontWeight.bold,
-                  ),
-                ),
-              ),
-            ],
-          ),
-
-          const SizedBox(height: 18),
-
-          const Text(
-            'Pengirim',
-            style: TextStyle(
-              color: Colors.grey,
-              fontSize: 11,
-            ),
-          ),
-
-          Text(
-            sender,
-            style: const TextStyle(
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-
-          const SizedBox(height: 12),
-
-          const Text(
-            'Penerima',
-            style: TextStyle(
-              color: Colors.grey,
-              fontSize: 11,
-            ),
-          ),
-
-          Text(
-            receiver,
-            style: const TextStyle(
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-
-          const SizedBox(height: 12),
-
-          const Text(
-            'Alamat',
-            style: TextStyle(
-              color: Colors.grey,
-              fontSize: 11,
-            ),
-          ),
-
-          Text(address),
-
-          const SizedBox(height: 16),
-
-          // =========================
-          // BERAT & ESTIMASI
-          // =========================
-
-          Row(
-            mainAxisAlignment:
-                MainAxisAlignment.spaceBetween,
-            children: [
-
-              Text(
-                '📦 $weight',
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-
-              Text(
-                '⏱ $estimate',
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
-
-          const SizedBox(height: 16),
-
-          // =========================
-          // BUTTON
-          // =========================
-
-         Row(
-  children: [
-
-    Expanded(
-      child: OutlinedButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => TrackingPage(
-                trackingNumber: trackingNumber,
-                sender: sender,
-                receiver: receiver,
-                address: address,
-                weight: weight,
-              ),
-            ),
-          );
-        },
-        child: const Text("Lihat Detail"),
+  return Container(
+    padding: const EdgeInsets.all(16),
+    decoration: BoxDecoration(
+      color: theme.cardColor,
+      borderRadius: BorderRadius.circular(14),
+      border: Border.all(
+        color: theme.dividerColor,
       ),
     ),
-
-    const SizedBox(width: 10),
-
-    Expanded(
-      child: status == "Sedang Diantar"
-
-          // ===============================
-          // BUTTON LACAK LOKASI
-          // ===============================
-          ? ElevatedButton.icon(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const MapTrackingPage(),
-                  ),
-                );
-              },
-              icon: const Icon(
-                Icons.location_on,
-                color: Colors.white,
-                size: 18,
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // RESI & STATUS
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              trackingNumber,
+              style: theme.textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.bold,
               ),
-              label: const Text(
-                "Lacak Lokasi",
-                style: TextStyle(color: Colors.white),
+            ),
+
+            Container(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 10,
+                vertical: 6,
               ),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.green,
-              ),
-            )
-
-          // ===============================
-          // BUTTON AMBIL PAKET
-          // ===============================
-          : ElevatedButton(
-              onPressed: status == "Ditugaskan"
-                  ? () {
-                      setState(() {
-                        final index = shipments.indexWhere(
-                          (shipment) =>
-                              shipment["trackingNumber"] ==
-                              trackingNumber,
-                        );
-
-                        if (index != -1) {
-                          shipments[index]["status"] =
-                              "Sedang Diantar";
-                        }
-
-                        selectedStatus = "Sedang Diantar";
-                      });
-                    }
-                  : null,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xff0755C9),
+              decoration: BoxDecoration(
+                color: status == "Selesai"
+                    ? Colors.green.withOpacity(0.15)
+                    : status == "Sedang Diantar"
+                        ? colorScheme.primary.withOpacity(0.15)
+                        : Colors.orange.withOpacity(0.15),
+                borderRadius: BorderRadius.circular(20),
               ),
               child: Text(
-                status == "Ditugaskan"
-                    ? "Ambil Paket"
-                    : "Selesai",
-                style: const TextStyle(color: Colors.white),
+                status,
+                style: TextStyle(
+                  color: status == "Selesai"
+                      ? Colors.green
+                      : status == "Sedang Diantar"
+                          ? colorScheme.primary
+                          : Colors.orange,
+                  fontSize: 11,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
-    ),
-  ],
-)
-        ],
-      ),
-    );
-  }
+          ],
+        ),
 
+        const SizedBox(height: 18),
+
+        Text(
+          "Pengirim",
+          style: theme.textTheme.bodySmall?.copyWith(
+            color: theme.textTheme.bodySmall?.color?.withOpacity(0.7),
+          ),
+        ),
+
+        Text(
+          sender,
+          style: theme.textTheme.bodyLarge?.copyWith(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+
+        const SizedBox(height: 12),
+
+        Text(
+          "Penerima",
+          style: theme.textTheme.bodySmall?.copyWith(
+            color: theme.textTheme.bodySmall?.color?.withOpacity(0.7),
+          ),
+        ),
+
+        Text(
+          receiver,
+          style: theme.textTheme.bodyLarge?.copyWith(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+
+        const SizedBox(height: 12),
+
+        Text(
+          "Alamat",
+          style: theme.textTheme.bodySmall?.copyWith(
+            color: theme.textTheme.bodySmall?.color?.withOpacity(0.7),
+          ),
+        ),
+
+        Text(address),
+
+        const SizedBox(height: 16),
+
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              "📦 $weight",
+              style: theme.textTheme.bodyMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+
+            Text(
+              "⏱ $estimate",
+              style: theme.textTheme.bodyMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
+
+        const SizedBox(height: 16),
+
+        Row(
+          children: [
+            Expanded(
+              child: OutlinedButton(
+                style: OutlinedButton.styleFrom(
+                  foregroundColor: colorScheme.primary,
+                  side: BorderSide(
+                    color: colorScheme.primary,
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => TrackingPage(
+                        trackingNumber: trackingNumber,
+                        sender: sender,
+                        receiver: receiver,
+                        address: address,
+                        weight: weight,
+                      ),
+                    ),
+                  );
+                },
+                child: const Text("Lihat Detail"),
+              ),
+            ),
+
+            const SizedBox(width: 10),
+
+            Expanded(
+              child: status == "Sedang Diantar"
+
+                  ? ElevatedButton.icon(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) =>
+                                const MapTrackingPage(),
+                          ),
+                        );
+                      },
+                      icon: const Icon(
+                        Icons.location_on,
+                        size: 18,
+                      ),
+                      label: const Text("Lacak Lokasi"),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.green,
+                        foregroundColor: Colors.white,
+                      ),
+                    )
+
+                  : ElevatedButton(
+                      onPressed: status == "Ditugaskan"
+                          ? () {
+                              setState(() {
+                                final index =
+                                    shipments.indexWhere(
+                                  (shipment) =>
+                                      shipment[
+                                          "trackingNumber"] ==
+                                      trackingNumber,
+                                );
+
+                                if (index != -1) {
+                                  shipments[index]["status"] =
+                                      "Sedang Diantar";
+                                }
+
+                                selectedStatus =
+                                    "Sedang Diantar";
+                              });
+                            }
+                          : null,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor:
+                            colorScheme.primary,
+                        foregroundColor:
+                            colorScheme.onPrimary,
+                      ),
+                      child: Text(
+                        status == "Ditugaskan"
+                            ? "Ambil Paket"
+                            : "Selesai",
+                      ),
+                    ),
+            ),
+          ],
+        ),
+      ],
+    ),
+  );
+}
 }
