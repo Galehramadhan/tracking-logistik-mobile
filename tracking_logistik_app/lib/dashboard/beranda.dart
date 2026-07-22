@@ -15,27 +15,7 @@ class SafeShipApp extends StatelessWidget {
       title: 'SafeShip',
       debugShowCheckedModeBanner: false,
       // Konfigurasi Tema Utama (Material 3 & Poppins)
-      theme: ThemeData(
-        useMaterial3: true,
-        fontFamily: 'Poppins',
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF1964D4), // Biru Utama
-          primary: const Color(0xFF1964D4),
-          background: const Color(0xFFF8F9FB),
-        ),
-      ),
-      // Konfigurasi Mode Gelap (Opsional, untuk mendukung dark mode sesuai permintaan)
-      darkTheme: ThemeData(
-        useMaterial3: true,
-        fontFamily: 'Poppins',
-        brightness: Brightness.dark,
-        colorScheme: ColorScheme.fromSeed(
-          brightness: Brightness.dark,
-          seedColor: const Color(0xFF1964D4),
-          primary: const Color(0xFF4A89F3),
-        ),
-      ),
-      themeMode: ThemeMode.system, // Menyesuaikan dengan setting device
+      
       // Routing Dasar
       initialRoute: '/',
       routes: {
@@ -51,35 +31,32 @@ class SafeShipApp extends StatelessWidget {
 // ============================================================================
 // PRESENTATION LAYER: HOME VIEW
 // ============================================================================
-
 class HomeView extends ConsumerWidget {
   const HomeView({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // Definisi warna berdasarkan referensi gambar
-    const Color primaryBlue = Color(0xFF1964D4);
-    const Color backgroundColor = Color(0xFFF8F9FB);
-    const Color textColor = Color(0xFF1C1C1E);
-
-    // Mengambil warna background berdasarkan tema agar mendukung dark mode
-    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
-    final currentBgColor = isDarkMode
-        ? Theme.of(context).colorScheme.background
-        : backgroundColor;
+    // Pakai tema langsung dari bapaknya (MaterialApp)
+    final tema = Theme.of(context);
+    final primaryBlue = tema.colorScheme.primary;
+    
+    final isDarkMode = tema.brightness == Brightness.dark;
+    final currentBgColor = isDarkMode ? tema.colorScheme.background : const Color(0xFFF8F9FB);
     final cardColor = isDarkMode ? const Color(0xFF2C2C2E) : Colors.white;
-    final currentTextColor = isDarkMode ? Colors.white : textColor;
+    final currentTextColor = isDarkMode ? Colors.white : const Color(0xFF1C1C1E);
 
     return Scaffold(
       backgroundColor: currentBgColor,
+      // FIX 1: Hapus `bottomNavigationBar:` dari sini, karena sudah diurus MainDashboard!
+      
       body: Stack(
         children: [
           // Background Biru Header
           Container(
             height: 240,
-            decoration: const BoxDecoration(
+            decoration: BoxDecoration(
               color: primaryBlue,
-              borderRadius: BorderRadius.only(
+              borderRadius: const BorderRadius.only(
                 bottomLeft: Radius.circular(24),
                 bottomRight: Radius.circular(24),
               ),
@@ -231,18 +208,9 @@ class HomeView extends ConsumerWidget {
             ),
           ),
         ],
-      ),
-
-      // Bottom Navigation Bar
-      bottomNavigationBar: _buildBottomNavigationBar(
-        context,
-        ref,
-        primaryBlue,
-        cardColor,
-      ),
+      )
     );
   }
-
   Widget _buildScanBarcodeCard(
     BuildContext context,
     Color primaryColor,
@@ -461,63 +429,8 @@ class HomeView extends ConsumerWidget {
       ),
     );
   }
-
-  Widget _buildBottomNavigationBar(
-    BuildContext context,
-    WidgetRef ref,
-    Color primaryColor,
-    Color cardColor,
-  ) {
-    return BottomNavigationBar(
-      type: BottomNavigationBarType.fixed,
-      backgroundColor: cardColor,
-      selectedItemColor: primaryColor,
-      unselectedItemColor: const Color(0xFF8E8E93),
-      selectedLabelStyle: const TextStyle(
-        fontFamily: 'Poppins',
-        fontSize: 12,
-        fontWeight: FontWeight.w500,
-      ),
-      unselectedLabelStyle: const TextStyle(
-        fontFamily: 'Poppins',
-        fontSize: 12,
-      ),
-      elevation: 16,
-      onTap: (index) {
-        if (index == 2) {
-          // Index 2 adalah tab Riwayat
-          ref.read(statusFilterProvider.notifier).state = 'Semua';
-          Navigator.pushNamed(context, '/riwayat');
-        } else if (index == 1) {
-          Navigator.pushNamed(context, '/pengiriman');
-        }
-        else if (index==3){
-          Navigator.pushNamed(context, '/profile');
-        } 
-        // TODO: Implementasi perubahan tab aktif (currentIndex) jika menggunakan state lokal
-      },
-      items: const [
-        BottomNavigationBarItem(
-          icon: Icon(Icons.home_filled),
-          label: 'Beranda',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.inventory_2_outlined),
-          label: 'Pengiriman',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.access_time),
-          label: 'Riwayat',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.person_outline),
-          label: 'Profil',
-        ),
-      ],
-    );
-  }
+  // (Letakkan fungsi _buildScanBarcodeCard, _buildSummaryCard, dan _buildPromoBanner kamu di sini)
 }
-
 // ============================================================================
 // BARCODE SCANNER VIEW
 // ============================================================================

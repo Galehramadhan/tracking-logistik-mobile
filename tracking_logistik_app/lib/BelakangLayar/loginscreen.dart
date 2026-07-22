@@ -29,10 +29,10 @@ class _LoginScreenState extends State<LoginScreen> {
       // 3. Arahkan ke halaman yang sesuai dengan rolenya
       if (widget.authController.role == UserRole.admingudang) {
         // Pindah ke halaman Scanner & GPS
-        print('Navigasi ke Halaman Admin Gudang'); 
+        Navigator.pushReplacementNamed(context, '/');
       } else if (widget.authController.role == UserRole.owner) {
         // Pindah ke halaman Dashboard Tracker
-        print('Navigasi ke Halaman Owner');
+        Navigator.pushReplacementNamed(context, '/');
       }
     } else if (widget.authController.status == AuthStatus.error) {
       // 4. Munculkan pesan error (SnackBar) di bawah layar
@@ -57,7 +57,7 @@ class _LoginScreenState extends State<LoginScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const Text(
-                  'Sistem Gudang',
+                  'SafeShip',
                   style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 40),
