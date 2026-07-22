@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-
 import 'package:tracking_logistik_app/profile/detail_profile.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'kendaraan.dart';
 import 'dokumen.dart';
 import 'notifikasi.dart';
@@ -228,7 +228,7 @@ class ProfilePage extends StatelessWidget {
                                 MaterialPageRoute(
                                   builder: (_) =>
                                       const NotifikasiPage(),
-                                ),
+                                ),  
                               );
                             },
                           ),
@@ -269,9 +269,20 @@ class ProfilePage extends StatelessWidget {
                     SizedBox(
                       width: double.infinity,
                       child: OutlinedButton.icon(
-                        onPressed: () {
-                        
-                          // TODO: Logout
+                        onPressed: () async {
+                          // 1. Hapus data sesi login di memori HP
+                          final prefs = SharedPreferencesAsync();
+                          await prefs.remove('user_role');
+
+                          // Cek apakah layar masih aktif sebelum berpindah
+                          if (!context.mounted) return;
+
+                          // 2. Lempar ke halaman login dan HANCURKAN semua riwayat halaman
+                          Navigator.pushNamedAndRemoveUntil(
+                            context, 
+                            '/login', 
+                            (route) => false, // (route) => false artinya membuang semua tumpukan kartu
+                          );
                         },
 
                         icon: const Icon(
