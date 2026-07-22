@@ -29,70 +29,159 @@ class _LoginScreenState extends State<LoginScreen> {
       // 3. Arahkan ke halaman yang sesuai dengan rolenya
       if (widget.authController.role == UserRole.admingudang) {
         // Pindah ke halaman Scanner & GPS
-        Navigator.pushReplacementNamed(context, '/');
+        Navigator.pushReplacementNamed(context, '/login');
       } else if (widget.authController.role == UserRole.owner) {
         // Pindah ke halaman Dashboard Tracker
-        Navigator.pushReplacementNamed(context, '/');
+        Navigator.pushReplacementNamed(context, '/dashboard');
       }
     } else if (widget.authController.status == AuthStatus.error) {
       // 4. Munculkan pesan error (SnackBar) di bawah layar
+      
+      // >>> MULAI PERUBAHAN DESAIN >>>
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(widget.authController.errorMessage)),
+        SnackBar(
+          content: Text(widget.authController.errorMessage),
+          backgroundColor: Colors.redAccent,
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
+        ),
       );
+      // <<< SELESAI PERUBAHAN DESAIN <<<
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(24.0),
-        // ListenableBuilder berfungsi untuk mendengarkan perubahan pada AuthController
-        child: ListenableBuilder(
-          listenable: widget.authController,
-          builder: (context, child) {
-            final status = widget.authController.status;
+      // >>> MULAI PERUBAHAN DESAIN >>>
+      backgroundColor: const Color(0xFFF5F7FA), 
+      body: SafeArea( 
+        child: Center( 
+          child: SingleChildScrollView( 
+            padding: const EdgeInsets.all(24.0),
+      // <<< SELESAI PERUBAHAN DESAIN <<<
+      
+            // ListenableBuilder berfungsi untuk mendengarkan perubahan pada AuthController
+            child: ListenableBuilder(
+              listenable: widget.authController,
+              builder: (context, child) {
+                final status = widget.authController.status;
 
-            return Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text(
-                  'SafeShip',
-                  style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 40),
-                TextField(
-                  controller: _usernameController,
-                  decoration: const InputDecoration(
-                    labelText: 'Username',
-                    border: OutlineInputBorder(),
+                // >>> MULAI PERUBAHAN DESAIN >>>
+                return Card(
+                  elevation: 8,
+                  shadowColor: Colors.black26,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
                   ),
-                ),
-                const SizedBox(height: 16),
-                TextField(
-                  controller: _passwordController,
-                  obscureText: true,
-                  decoration: const InputDecoration(
-                    labelText: 'Password',
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-                const SizedBox(height: 32),
-                
-                // Logika UI: Kalau toples berisi 'loading', munculkan spinner. 
-                // Kalau selain itu (initial/error), munculkan tombol MASUK.
-                status == AuthStatus.loading
-                    ? const CircularProgressIndicator()
-                    : ElevatedButton(
-                        onPressed: _prosesLogin,
-                        style: ElevatedButton.styleFrom(
-                          minimumSize: const Size(double.infinity, 50),
+                  color: Colors.white,
+                  child: Padding(
+                    padding: const EdgeInsets.all(32.0),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(
+                          Icons.local_shipping_rounded,
+                          size: 72,
+                          color: Colors.blueAccent,
                         ),
-                        child: const Text('MASUK'),
-                      ),
-              ],
-            );
-          },
+                        const SizedBox(height: 16),
+                        const Text(
+                          'SafeShip',
+                          style: TextStyle(
+                            fontSize: 32, 
+                            fontWeight: FontWeight.w900,
+                            color: Color(0xFF1E293B),
+                            letterSpacing: 1.2,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        const Text(
+                          'Silakan masuk ke akun Anda',
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey,
+                          ),
+                        ),
+                        const SizedBox(height: 40),
+                        TextField(
+                          controller: _usernameController,
+                          decoration: InputDecoration(
+                            labelText: 'Username',
+                            prefixIcon: const Icon(Icons.person_outline),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: BorderSide(color: Colors.grey.shade300),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: const BorderSide(color: Colors.blueAccent, width: 2),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 20), 
+                        TextField(
+                          controller: _passwordController,
+                          obscureText: true,
+                          decoration: InputDecoration(
+                            labelText: 'Password',
+                            prefixIcon: const Icon(Icons.lock_outline),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: BorderSide(color: Colors.grey.shade300),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: const BorderSide(color: Colors.blueAccent, width: 2),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 40),
+                // <<< SELESAI PERUBAHAN DESAIN <<<
+                        
+                        // Logika UI: Kalau toples berisi 'loading', munculkan spinner. 
+                        // Kalau selain itu (initial/error), munculkan tombol MASUK.
+                        status == AuthStatus.loading
+                            ? const CircularProgressIndicator()
+                            : ElevatedButton(
+                                onPressed: _prosesLogin,
+                                
+                                // >>> MULAI PERUBAHAN DESAIN >>>
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.blueAccent,
+                                  foregroundColor: Colors.white,
+                                  minimumSize: const Size(double.infinity, 55),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  elevation: 2,
+                                ),
+                                child: const Text(
+                                  'MASUK',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    letterSpacing: 1.5,
+                                  ),
+                                ),
+                                // <<< SELESAI PERUBAHAN DESAIN <<<
+                              ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
         ),
       ),
     );

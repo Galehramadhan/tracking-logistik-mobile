@@ -88,7 +88,7 @@ class HomeView extends ConsumerWidget {
                               ),
                             ),
                             Text(
-                              'Galeh Ramadhan', // Nantinya bisa di-bind dari ProfileState
+                              'Budi Santoso', // Nantinya bisa di-bind dari ProfileState
                               style: TextStyle(
                                 fontFamily: 'Poppins',
                                 color: Colors.white,
