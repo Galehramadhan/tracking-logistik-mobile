@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:tracking_logistik_app/riwayat/data.dart';
-
+import 'dart:convert';
+import 'package:tracking_logistik_app/riwayat/shipment_entity.dart';
 
 class HomeView extends ConsumerWidget {
   const HomeView({super.key});
@@ -88,6 +89,7 @@ class HomeView extends ConsumerWidget {
                     // Section Scan Barcode (Menggantikan Lacak Kiriman)
                     _buildScanBarcodeCard(
                       context,
+                      ref,
                       primaryBlue,
                       cardColor,
                       currentTextColor,
@@ -186,6 +188,7 @@ class HomeView extends ConsumerWidget {
   }
   Widget _buildScanBarcodeCard(
     BuildContext context,
+    WidgetRef ref,
     Color primaryColor,
     Color cardColor,
     Color textColor,
@@ -242,19 +245,45 @@ class HomeView extends ConsumerWidget {
                 );
 
                 // Jika berhasil mendapatkan data scan dari kamera
+                // Jika berhasil mendapatkan data scan dari kamera
                 if (scannedData != null && context.mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(
-                        'Berhasil Scan Resi: $scannedData',
-                        style: const TextStyle(fontFamily: 'Poppins'),
+                  try {
+                    // 1. Terjemahkan string JSON dari QR Code
+                    final Map<String, dynamic> decodedData = jsonDecode(scannedData);
+
+                    // 2. Bentuk objek pengiriman baru
+                    final newShipment = ShipmentEntity(
+                      id: DateTime.now().millisecondsSinceEpoch.toString(), // ID unik otomatis
+                      resi: decodedData['resi'] ?? 'RESI-UNKNOWN',
+                      status: 'Ditugaskan', // Status default saat baru di-scan
+                      date: DateTime.now(),
+                      origin: decodedData['origin'] ?? 'Gudang Grosir',
+                      destination: decodedData['destination'] ?? 'Tujuan',
+                    );
+
+                    // 3. Masukkan ke dalam State Riverpod
+                    ref.read(shipmentListProvider.notifier).tambahPengiriman(newShipment);
+
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Berhasil Scan Resi: ${newShipment.resi}'),
+                        backgroundColor: Colors.green,
+                        behavior: SnackBarBehavior.floating,
                       ),
-                      backgroundColor: Colors.green,
-                      behavior: SnackBarBehavior.floating,
-                    ),
-                  );
-                  // Navigasi ke halaman pengiriman ketika discan
-                  Navigator.pushNamed(context, '/pengiriman');
+                    );
+
+                    // 4. Navigasi ke halaman pengiriman
+                    Navigator.pushNamed(context, '/pengiriman');
+                  } catch (e) {
+                    // Tangani error jika format QR code bukan JSON yang valid
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Format QR Code tidak valid!'),
+                        backgroundColor: Colors.red,
+                        behavior: SnackBarBehavior.floating,
+                      ),
+                    );
+                  }
                 }
               },
               icon: const Icon(Icons.document_scanner, color: Colors.white),
