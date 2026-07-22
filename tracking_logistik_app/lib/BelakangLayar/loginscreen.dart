@@ -37,7 +37,6 @@ class _LoginScreenState extends State<LoginScreen> {
     } else if (widget.authController.status == AuthStatus.error) {
       // 4. Munculkan pesan error (SnackBar) di bawah layar
       
-      // >>> MULAI PERUBAHAN DESAIN >>>
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(widget.authController.errorMessage),
@@ -48,20 +47,17 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
         ),
       );
-      // <<< SELESAI PERUBAHAN DESAIN <<<
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // >>> MULAI PERUBAHAN DESAIN >>>
       backgroundColor: const Color(0xFFF5F7FA), 
       body: SafeArea( 
         child: Center( 
           child: SingleChildScrollView( 
             padding: const EdgeInsets.all(24.0),
-      // <<< SELESAI PERUBAHAN DESAIN <<<
       
             // ListenableBuilder berfungsi untuk mendengarkan perubahan pada AuthController
             child: ListenableBuilder(
@@ -69,7 +65,6 @@ class _LoginScreenState extends State<LoginScreen> {
               builder: (context, child) {
                 final status = widget.authController.status;
 
-                // >>> MULAI PERUBAHAN DESAIN >>>
                 return Card(
                   elevation: 8,
                   shadowColor: Colors.black26,
@@ -146,7 +141,6 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ),
                         const SizedBox(height: 40),
-                // <<< SELESAI PERUBAHAN DESAIN <<<
                         
                         // Logika UI: Kalau toples berisi 'loading', munculkan spinner. 
                         // Kalau selain itu (initial/error), munculkan tombol MASUK.
@@ -155,7 +149,6 @@ class _LoginScreenState extends State<LoginScreen> {
                             : ElevatedButton(
                                 onPressed: _prosesLogin,
                                 
-                                // >>> MULAI PERUBAHAN DESAIN >>>
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Colors.blueAccent,
                                   foregroundColor: Colors.white,
@@ -173,7 +166,6 @@ class _LoginScreenState extends State<LoginScreen> {
                                     letterSpacing: 1.5,
                                   ),
                                 ),
-                                // <<< SELESAI PERUBAHAN DESAIN <<<
                               ),
                       ],
                     ),
