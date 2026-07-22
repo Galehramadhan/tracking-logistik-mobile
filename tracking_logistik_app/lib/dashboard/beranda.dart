@@ -1,32 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
-import 'package:tracking_logistik_app/riwayat/riwayatpengiriman.dart';
 import 'package:tracking_logistik_app/riwayat/data.dart';
-import 'package:tracking_logistik_app/Pengiriman/pengiriman_main.dart';
-import 'package:tracking_logistik_app/profile/profilemain.dart';
-
-class SafeShipApp extends StatelessWidget {
-  const SafeShipApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'SafeShip',
-      debugShowCheckedModeBanner: false,
-      // Konfigurasi Tema Utama (Material 3 & Poppins)
-      
-      // Routing Dasar
-      initialRoute: '/',
-      routes: {
-        '/': (context) => const HomeView(),
-        '/pengiriman': (context) => const ShipmentPage(),
-        '/riwayat': (context) => const HistoryPage(),
-        '/profile': (context) => const ProfilePage(),
-      },
-    );
-  }
-}
 
 // ============================================================================
 // PRESENTATION LAYER: HOME VIEW
