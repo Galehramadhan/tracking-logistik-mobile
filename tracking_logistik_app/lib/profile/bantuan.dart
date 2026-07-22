@@ -14,7 +14,7 @@ class BantuanPage extends StatelessWidget {
         padding: EdgeInsets.all(20),
         child: Text(
           "Jika mengalami kendala saat pengiriman atau penggunaan aplikasi, silakan hubungi Admin melalui:\n\n"
-          "Email : support@driver.com\n"
+          "Email : support@admin.com\n"
           "Telepon : 0812-3456-7890",
           style: TextStyle(fontSize: 16),
         ),

@@ -76,13 +76,6 @@ class _ShipmentPageState extends State<ShipmentPage> {
               color: colorScheme.primary,
               child: Row(
                 children: [
-                  IconButton(
-                    onPressed: () => Navigator.pop(context),
-                    icon: Icon(
-                      Icons.arrow_back_ios_new,
-                      color: colorScheme.onPrimary,
-                    ),
-                  ),
                   Expanded(
                     child: Center(
                       child: Text(
@@ -415,7 +408,7 @@ class _ShipmentPageState extends State<ShipmentPage> {
                       ),
                       child: Text(
                         status == "Ditugaskan"
-                            ? "Ambil Paket"
+                            ? "Ambil Barang"
                             : "Selesai",
                       ),
                     ),

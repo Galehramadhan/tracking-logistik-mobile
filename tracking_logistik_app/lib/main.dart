@@ -60,6 +60,8 @@ class _SafeShipAppState extends State<SafeShipApp> {
         
         // Daftarkan alamat '/' agar Navigator.pushReplacementNamed tahu tujuannya
         '/dashboard': (context) => const MainDashboard(), 
+
+        '/logout' : (context) => LoginScreen(authController: _authController),
       },
     );
   }

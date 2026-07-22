@@ -7,7 +7,7 @@ class DriverDetailPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Informasi Driver"),
+        title: const Text("Informasi Admin"),
         backgroundColor: const Color(0xff0A57D7),
       ),
       body: ListView(
@@ -15,7 +15,7 @@ class DriverDetailPage extends StatelessWidget {
         children: [
 
           detailItem("Nama", "Budi Santoso"),
-          detailItem("ID Driver", "DRV00125"),
+          detailItem("ID Admin", "DRV00125"),
           detailItem("No HP", "081234567890"),
           detailItem("Email", "budi@email.com"),
           detailItem("Jenis Kelamin", "Laki-laki"),

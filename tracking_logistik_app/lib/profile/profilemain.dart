@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:tracking_logistik_app/profile/detail_profile.dart';
 import 'kendaraan.dart';
 import 'dokumen.dart';
-import 'pendapatan.dart';
 import 'notifikasi.dart';
 import 'bantuan.dart';
 import 'tentang.dart';
@@ -48,7 +47,7 @@ class ProfilePage extends StatelessWidget {
                         const Expanded(
                           child: Center(
                             child: Text(
-                              "Profil Driver",
+                              "Profil Admin",
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 20,
@@ -101,7 +100,7 @@ class ProfilePage extends StatelessWidget {
                           borderRadius: BorderRadius.circular(15),
                         ),
                         child: const Text(
-                          "ID Driver",
+                          "ID Admin",
                           style: TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.w500,
@@ -112,7 +111,7 @@ class ProfilePage extends StatelessWidget {
                       const SizedBox(width: 10),
 
                       const Text(
-                        "DRV00125",
+                        "ADMN00125",
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 17,
@@ -175,7 +174,7 @@ class ProfilePage extends StatelessWidget {
                           profileMenu(
                             context,
                             Icons.person_outline,
-                            "Informasi Driver",
+                            "Informasi Admin",
                             onTap: () {
                               Navigator.push(
                                 context,
@@ -214,21 +213,6 @@ class ProfilePage extends StatelessWidget {
                                 MaterialPageRoute(
                                   builder: (_) =>
                                       const DokumenPage(),
-                                ),
-                              );
-                            },
-                          ),
-
-                          profileMenu(
-                            context,
-                            Icons.account_balance_wallet_outlined,
-                            "Riwayat Pendapatan",
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (_) =>
-                                      const PendapatanPage(),
                                 ),
                               );
                             },
@@ -282,8 +266,6 @@ class ProfilePage extends StatelessWidget {
                       ),
                     ),
 
-                    const SizedBox(height: 20),
-
                     SizedBox(
                       width: double.infinity,
                       child: OutlinedButton.icon(
@@ -291,6 +273,7 @@ class ProfilePage extends StatelessWidget {
                         
                           // TODO: Logout
                         },
+
                         icon: const Icon(
                           Icons.logout,
                           color: Colors.red,
