@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'beranda.dart'; // Ini sudah benar, memanggil HomeView dan class Dummy dari beranda.dart
-
+import 'package:tracking_logistik_app/Pengiriman/pengiriman_main.dart';
+import 'package:tracking_logistik_app/Riwayat/riwayatpengiriman.dart';
+import 'package:tracking_logistik_app/profile/profilemain.dart';
 class MainDashboard extends ConsumerStatefulWidget {
   const MainDashboard({super.key});
 
@@ -14,9 +16,9 @@ class _MainDashboardState extends ConsumerState<MainDashboard> {
 
   final List<Widget> _pages = [
     const HomeView(), 
-    const PengirimanViewDummy(), 
-    const RiwayatViewDummy(),
-    const Center(child: Text('Halaman Profil')), 
+    const ShipmentPage(), 
+    const HistoryPage(),
+    const ProfilePage(), 
   ];
 
   @override
