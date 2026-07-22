@@ -35,15 +35,6 @@ class ProfilePage extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: Row(
                       children: [
-                        IconButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          icon: const Icon(
-                            Icons.arrow_back_ios_new,
-                            color: Colors.white,
-                          ),
-                        ),
                         const Expanded(
                           child: Center(
                             child: Text(
