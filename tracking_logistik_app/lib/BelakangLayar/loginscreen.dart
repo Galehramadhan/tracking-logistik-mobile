@@ -29,7 +29,7 @@ class _LoginScreenState extends State<LoginScreen> {
       // 3. Arahkan ke halaman yang sesuai dengan rolenya
       if (widget.authController.role == UserRole.admingudang) {
         // Pindah ke halaman Scanner & GPS
-        Navigator.pushReplacementNamed(context, '/login');
+        Navigator.pushReplacementNamed(context, '/dashboard');
       } else if (widget.authController.role == UserRole.owner) {
         // Pindah ke halaman Dashboard Tracker
         Navigator.pushReplacementNamed(context, '/dashboard');
