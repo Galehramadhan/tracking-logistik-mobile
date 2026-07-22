@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tracking_logistik_app/BelakangLayar/loginscreen.dart';
+import 'package:tracking_logistik_app/Pengiriman/pengiriman_main.dart';
 import 'BelakangLayar/controller.dart';
 
 // FIX 1: Pastikan kamu meng-import file tempat MainDashboard berada
@@ -59,7 +60,8 @@ class _SafeShipAppState extends State<SafeShipApp> {
         '/login': (context) => LoginScreen(authController: _authController),
         
         // Daftarkan alamat '/' agar Navigator.pushReplacementNamed tahu tujuannya
-        '/dashboard': (context) => const MainDashboard(), 
+        '/dashboard': (context) => const MainDashboard(),
+        '/pengiriman':(context) => const ShipmentPage(),
 
       },
     );

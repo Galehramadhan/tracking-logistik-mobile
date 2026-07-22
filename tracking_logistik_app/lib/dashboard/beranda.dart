@@ -13,16 +13,20 @@ class HomeView extends ConsumerWidget {
     // Pakai tema langsung dari bapaknya (MaterialApp)
     final tema = Theme.of(context);
     final primaryBlue = tema.colorScheme.primary;
-    
+
     final isDarkMode = tema.brightness == Brightness.dark;
-    final currentBgColor = isDarkMode ? tema.colorScheme.background : const Color(0xFFF8F9FB);
+    final currentBgColor = isDarkMode
+        ? tema.colorScheme.background
+        : const Color(0xFFF8F9FB);
     final cardColor = isDarkMode ? const Color(0xFF2C2C2E) : Colors.white;
-    final currentTextColor = isDarkMode ? Colors.white : const Color(0xFF1C1C1E);
+    final currentTextColor = isDarkMode
+        ? Colors.white
+        : const Color(0xFF1C1C1E);
 
     return Scaffold(
       backgroundColor: currentBgColor,
+
       // FIX 1: Hapus `bottomNavigationBar:` dari sini, karena sudah diurus MainDashboard!
-      
       body: Stack(
         children: [
           // Background Biru Header
@@ -183,9 +187,10 @@ class HomeView extends ConsumerWidget {
             ),
           ),
         ],
-      )
+      ),
     );
   }
+
   Widget _buildScanBarcodeCard(
     BuildContext context,
     WidgetRef ref,
@@ -249,11 +254,14 @@ class HomeView extends ConsumerWidget {
                 if (scannedData != null && context.mounted) {
                   try {
                     // 1. Terjemahkan string JSON dari QR Code
-                    final Map<String, dynamic> decodedData = jsonDecode(scannedData);
+                    final Map<String, dynamic> decodedData = jsonDecode(
+                      scannedData,
+                    );
 
                     // 2. Bentuk objek pengiriman baru
                     final newShipment = ShipmentEntity(
-                      id: DateTime.now().millisecondsSinceEpoch.toString(), // ID unik otomatis
+                      id: DateTime.now().millisecondsSinceEpoch
+                          .toString(), // ID unik otomatis
                       resi: decodedData['resi'] ?? 'RESI-UNKNOWN',
                       status: 'Ditugaskan', // Status default saat baru di-scan
                       date: DateTime.now(),
@@ -262,11 +270,15 @@ class HomeView extends ConsumerWidget {
                     );
 
                     // 3. Masukkan ke dalam State Riverpod
-                    ref.read(shipmentListProvider.notifier).tambahPengiriman(newShipment);
+                    ref
+                        .read(shipmentListProvider.notifier)
+                        .tambahPengiriman(newShipment);
 
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
-                        content: Text('Berhasil Scan Resi: ${newShipment.resi}'),
+                        content: Text(
+                          'Berhasil Scan Resi: ${newShipment.resi}',
+                        ),
                         backgroundColor: Colors.green,
                         behavior: SnackBarBehavior.floating,
                       ),
@@ -277,10 +289,11 @@ class HomeView extends ConsumerWidget {
                   } catch (e) {
                     // Tangani error jika format QR code bukan JSON yang valid
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Format QR Code tidak valid!'),
+                      SnackBar(
+                        content: Text('Error: $e (QR Code tidak valid)'),
                         backgroundColor: Colors.red,
                         behavior: SnackBarBehavior.floating,
+                        duration: const Duration(seconds: 4),
                       ),
                     );
                   }
@@ -383,6 +396,7 @@ class HomeView extends ConsumerWidget {
       ),
     );
   }
+
   Widget _buildPromoBanner(Color primaryColor, Color cardColor) {
     return Container(
       padding: const EdgeInsets.all(16),
@@ -431,6 +445,7 @@ class HomeView extends ConsumerWidget {
       ),
     );
   }
+
   // (Letakkan fungsi _buildScanBarcodeCard, _buildSummaryCard, dan _buildPromoBanner kamu di sini)
 }
 // ============================================================================
@@ -558,9 +573,7 @@ class PengirimanViewDummy extends StatelessWidget {
           style: TextStyle(fontFamily: 'Poppins'),
         ),
       ),
-      body: const Center(
-        child: Text('halo')
-      ),
+      body: const Center(child: Text('halo')),
     );
   }
 }
